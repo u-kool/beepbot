@@ -1,0 +1,8 @@
+.vscode/
+config.env
+*.exe
+beepbot
+/releases
+sounds/*
+!sounds/.gitkeep
+*.xml

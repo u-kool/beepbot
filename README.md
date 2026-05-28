@@ -1,0 +1,175 @@
+# BeepBot
+
+![Go Version](https://img.shields.io/badge/Go-1.25.0-blue)
+![License](https://img.shields.io/badge/License-MIT-green)
+![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux-lightgrey)
+
+[🇷🇺 Читать на русском языке](#beepbot-russian-version)
+
+This project was inspired by the original `funnebot` by `@Chazoshtare`, written in Rust. The core concept of triggered sounds and audio effects was adapted and rewritten from scratch in Go to explore concurrent programming. It has been extended with native sequential queuing and simultaneous sound mixing.
+
+`BeepBot` is a lightweight Twitch sound bot designed to play audio files with real-time effects. It runs on an event-driven model using audio driver callbacks, ensuring minimal CPU usage. It connects anonymously to Twitch IRC, requiring no security OAuth tokens to read chat commands.
+
+---
+
+## Setup & Launch
+
+1. Download the archive from the **Releases** section and unpack it.
+2. Open `config.env` with a text editor and enter your Twitch channel name:
+
+   `CHANNEL=your_channel_name`
+
+3. The release includes a pre-created `sounds` folder with a default `test.wav` file so the bot can start successfully. You can run the executable immediately.
+
+### Audio Requirements
+
+> ⚠️ **Important:** All audio files must be in **`.wav`** format.
+> 
+> It is highly recommended to use files with a sample rate of **`44100 Hz`**. The bot can load and play files with other sample rates (e.g., 48000 Hz), but they will play slower and lower because the audio engine is strictly configured for 44100 Hz.
+> 
+> The filename (excluding the `.wav` extension) becomes the command. For example, `omg.wav` is triggered via `!m omg`.
+
+---
+
+## Chat Commands
+
+The main command for viewers is:
+`!m [sound_name]-[effects]`
+
+* `!m rand` — play a random sound from the `sounds` folder.
+
+### Admin Commands (Broadcaster & Moderators Only)
+
+All state changes are automatically logged to the console with timestamps:
+
+| Command | Description |
+| --- | --- |
+| `!m mute` | Mutes the bot (instantly cuts current audio, clears the queue). |
+| `!m unmute` | Unmutes the bot. |
+| `!m qon` | Enables sequential queue (sounds play strictly one after another). |
+| `!m qoff` | Disables queue (sounds overlay and play concurrently). |
+| `!m earon` | Enables the extreme volume boost (`er`) effect (enabled by default). |
+| `!m earoff` | Disables the `er` effect globally to protect viewers' ears. |
+| `!m stop` | Instantly stops currently playing sound and clears the entire queue. |
+| `!m skip` | Instantly interrupts current sound and plays the next queued item. |
+
+---
+
+## Audio Effects
+
+Viewers can modify sounds by appending parameters separated by a hyphen `-` after the sound name. The order of parameters does not matter.
+
+| Parameter | Effect | Range | Description |
+| --- | --- | --- | --- |
+| `sp[value]` | Speed | 10 - 200 | Playback speed and pitch (Default: 100. `sp150` is faster, `sp50` is slower). |
+| `ct[value]` | Cut | 0 - 100 | Cuts the specified percentage of the sound from the end (e.g., `ct20`). |
+| `sk[value]` | Skip | 0 - 100 | Skips the specified percentage of the sound from the start (e.g., `sk20`). |
+| `rs` | Reverse | - | Plays the sound backward. |
+| `lq` | Low Quality | - | Applies an 8-bit retro sound effect (bitcrushing). |
+| `er` | Ear Rape | - | Applies an extreme volume overdrive (if not globally disabled by `earoff`). |
+| `dl` | Delay | - | Applies a decaying echo effect. |
+| `st` | Stutter | - | Applies a rapid stutter effect to the beginning of the sound. |
+
+> ℹ️ *Note:* Trimming parameters (`sk` and `ct`) are always applied to the original sound first, before applying reverse (`rs`) or speed (`sp`) modifications.
+
+---
+
+## Combination Scenarios
+
+### 1. Simultaneous Mixing (Layering)
+Sounds joined by a plus sign **`+`** will be mixed and played **simultaneously**. All specified parameters at the end are applied to the entire resulting mix.
+* *Example:* `!m sound1+sound2+sound3-rs-lq-ct50` 
+  (sound1, sound2, and sound3 will start together. The combined mix will be cut in half and played backward).
+
+### 2. Sequential Chain
+Sounds separated by a **space** will play sequentially (one after another) within a single chat message. You can combine single sounds and mixed sounds in a chain.
+* *Example:* `!m sound1-sp50-rs sound2+sound3-st sound4-sk40`
+  (First, a slowed-down and reversed sound1 plays. Immediately after, sound2 and sound3 play together with a stutter. Finally, sound4 plays skipping its first 40%).
+
+***
+
+<a name="beepbot-russian-version"></a>
+
+# BeepBot (Русская версия)
+
+Этот проект вдохновлен оригинальным ботом `funnebot` от `@Chazoshtare`, написанным на Rust. Я взял его идею воспроизведения звуков в чате и наложения на них различных аудиоэффектов, переписал всё с нуля на Go и добавил собственный функционал очереди воспроизведения и одновременного микширования звуков.
+
+`BeepBot` — это легкий Twitch-бот для проигрывания аудиофайлов со звуковыми эффектами в реальном времени. Он не нагружает ваш компьютер фоновыми процессами и работает полностью анонимно (вам не нужно вводить свои пароли или секретные OAuth-токены для чтения чата).
+
+---
+
+## Настройка и запуск
+
+1. Скачайте архив с ботом из раздела **Releases** и распакуйте его в любую папку.
+2. Откройте файл `config.env` текстовым редактором и впишите имя вашего Twitch-канала после знака равно:
+
+   `CHANNEL=имя_вашего_канала`
+
+3. В релизном архиве уже создана папка `sounds` и в неё вложен тестовый файл `test.wav`, чтобы бот запустился без ошибок. Вы можете запускать бота и сразу тестировать его.
+
+### Требования к звукам
+
+> ⚠️ **Важно:** Все новые звуки должны быть в формате **`.wav`**.
+> 
+> Настоятельно рекомендуется использовать файлы с частотой дискретизации **`44100 Гц`**. Бот сможет проиграть файлы и с другой частотой (например, 48000 Гц), но они будут звучать медленнее и ниже, так как аудиодвижок бота жестко настроен на 44100 Гц.
+> 
+> Название файла (без расширения `.wav`) становится командой для его вызова в чате. Например, файл `omg.wav` будет вызываться командой `!m omg`.
+
+---
+
+## Синтаксис команд в чате
+
+Основная команда для зрителей:
+`!m [имя_звука]-[эффекты]`
+
+* `!m rand` — воспроизвести случайный звук из папки `sounds`.
+
+### Команды администрирования (Доступны только Стримеру и Модераторам)
+
+Команды управления состоянием выводят подробный статус работы бота прямо в консоль с временными метками:
+
+| Команда | Описание |
+| --- | --- |
+| `!m mute` | Заглушить бота (текущий звук мгновенно обрывается, а очередь полностью очищается). |
+| `!m unmute` | Снять заглушение. |
+| `!m qon` | Включить режим очереди (звуки проигрываются строго друг за другом). |
+| `!m qoff` | Выключить режим очереди (звуки накладываются параллельно сразу по мере поступления). |
+| `!m earon` | Разрешить использование эффекта экстремального перегруза `er` (по умолчанию включено). |
+| `!m earoff` | Полностью заблокировать эффект `er` на уровне бота для защиты ушей зрителей. |
+| `!m stop` | Мгновенно выключить текущий звук и полностью очистить очередь. |
+| `!m skip` | Мгновенно прервать текущий играющий звук и запустить следующий из очереди (сама очередь сохраняется). |
+
+---
+
+## Доступные аудиоэффекты
+
+Зрители могут модифицировать звуки, указывая параметры через дефис `-` после имени звука. Порядок указания параметров не имеет значения.
+
+| Параметр | Эффект | Диапазон | Описание |
+| --- | --- | --- | --- |
+| `sp[число]` | Скорость | 10 - 200 | Скорость и высота воспроизведения (Норма: 100. `sp150` — быстрее и выше, `sp50` — медленнее и ниже). |
+| `ct[число]` | Срез (Cut) | 0 - 100 | Срезать указанный процент звука с конца (например, `ct20` отрежет последние 20% длины). |
+| `sk[число]` | Пропуск | 0 - 100 | Пропустить указанный процент звука с начала (например, `sk20` пропустит первые 20% длины). |
+| `rs` | Реверс | - | Проиграть звук задом наперед. |
+| `lq` | Лоу-фай | - | Эффект 8-битного ретро-звука (биткрашинг). |
+| `er` | Перегруз | - | Экстремальный перегруз громкости (работает, только если не заблокирован командой `earoff`). |
+| `dl` | Эхо (Delay) | - | Эффект плавного затухающего эхо. |
+| `st` | Заикание | - | Эффект быстрого заикания в самом начале звука. |
+
+> ℹ️ *Примечание:* Параметры обрезки (`sk` и `ct`) всегда применяются к исходному звуку первыми, а уже затем накладываются эффекты реверса (`rs`) и изменения скорости (`sp`).
+
+---
+
+## Продвинутые сценарии комбинирования
+
+### 1. Одновременное наложение (Микширование)
+Звуки, соединенные знаком плюс **`+`**, будут автоматически смешаны и воспроизведутся **одновременно**. Все указанные в конце параметры эффектов применятся ко всему получившемуся миксу целиком.
+* *Пример:* `!m sound1+sound2+sound3-rs-lq-ct50` 
+  (звуки sound1, sound2 и sound3 запустятся одновременно, а получившийся общий микс будет урезан наполовину и развернут задом наперед).
+
+### 2. Последовательная цепочка
+Звуки, разделенные обычным **пробелом**, будут воспроизводиться последовательно (один за другим) в рамках одного сообщения. Вы можете комбинировать одиночные звуки и миксы в одну длинную цепочку.
+* *Пример:* `!m sound1-sp50-rs sound2+sound3-st sound4-sk40`
+  (Сначала проиграется замедленный и развернутый sound1, сразу после его окончания одновременно сыграют sound2 и sound3 с эффектом заикания, а в конце запустится sound4 без первых 40% длины).
+
+***
