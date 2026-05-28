@@ -48,8 +48,8 @@ All state changes are automatically logged to the console with timestamps:
 | `!m unmute` | Unmutes the bot. |
 | `!m qon` | Enables sequential queue (sounds play strictly one after another). |
 | `!m qoff` | Disables queue (sounds overlay and play concurrently). |
-| `!m earon` | Enables the extreme volume boost (`er`) effect (enabled by default). |
-| `!m earoff` | Disables the `er` effect globally to protect viewers' ears. |
+| `!m eron` | Enables the extreme volume boost (`er`) effect (enabled by default). |
+| `!m eroff` | Disables the `er` effect globally to protect viewers' ears. |
 | `!m stop` | Instantly stops currently playing sound and clears the entire queue. |
 | `!m skip` | Instantly interrupts current sound and plays the next queued item. |
 
@@ -66,7 +66,7 @@ Viewers can modify sounds by appending parameters separated by a hyphen `-` afte
 | `sk[value]` | Skip | 0 - 100 | Skips the specified percentage of the sound from the start (e.g., `sk20`). |
 | `rs` | Reverse | - | Plays the sound backward. |
 | `lq` | Low Quality | - | Applies an 8-bit retro sound effect (bitcrushing). |
-| `er` | Ear Rape | - | Applies an extreme volume overdrive (if not globally disabled by `earoff`). |
+| `er` | Ear Rape | - | Applies an extreme volume overdrive (if not globally disabled by `eroff`). |
 | `dl` | Delay | - | Applies a decaying echo effect. |
 | `st` | Stutter | - | Applies a rapid stutter effect to the beginning of the sound. |
 
@@ -134,8 +134,8 @@ Sounds separated by a **space** will play sequentially (one after another) withi
 | `!m unmute` | Снять заглушение. |
 | `!m qon` | Включить режим очереди (звуки проигрываются строго друг за другом). |
 | `!m qoff` | Выключить режим очереди (звуки накладываются параллельно сразу по мере поступления). |
-| `!m earon` | Разрешить использование эффекта экстремального перегруза `er` (по умолчанию включено). |
-| `!m earoff` | Полностью заблокировать эффект `er` на уровне бота для защиты ушей зрителей. |
+| `!m eron` | Разрешить использование эффекта экстремального перегруза `er` (по умолчанию включено). |
+| `!m eroff` | Полностью заблокировать эффект `er` на уровне бота для защиты ушей зрителей. |
 | `!m stop` | Мгновенно выключить текущий звук и полностью очистить очередь. |
 | `!m skip` | Мгновенно прервать текущий играющий звук и запустить следующий из очереди (сама очередь сохраняется). |
 
@@ -152,7 +152,7 @@ Sounds separated by a **space** will play sequentially (one after another) withi
 | `sk[число]` | Пропуск | 0 - 100 | Пропустить указанный процент звука с начала (например, `sk20` пропустит первые 20% длины). |
 | `rs` | Реверс | - | Проиграть звук задом наперед. |
 | `lq` | Лоу-фай | - | Эффект 8-битного ретро-звука (биткрашинг). |
-| `er` | Перегруз | - | Экстремальный перегруз громкости (работает, только если не заблокирован командой `earoff`). |
+| `er` | Перегруз | - | Экстремальный перегруз громкости (работает, только если не заблокирован командой `eroff`). |
 | `dl` | Эхо (Delay) | - | Эффект плавного затухающего эхо. |
 | `st` | Заикание | - | Эффект быстрого заикания в самом начале звука. |
 
