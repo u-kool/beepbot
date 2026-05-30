@@ -40,7 +40,7 @@ func main() {
 	b := bot.New(channel, soundsBuffer)
 
 	sr := beep.SampleRate(44100)
-	if err := speaker.Init(sr, sr.N(time.Second/5)); err != nil {
+	if err := speaker.Init(sr, sr.N(time.Second/10)); err != nil {
 		finalErr := fmt.Errorf("speaker is failed to init: %w", err)
 		exitWithError(finalErr)
 	}
