@@ -29,7 +29,3 @@ func (r *reversedStreamer) Stream(samples [][2]float64) (n int, ok bool) {
 func (r *reversedStreamer) Err() error {
 	return nil
 }
-
-func (r *reversedStreamer) Len() int {
-	return r.pos + 1
-}

@@ -17,13 +17,15 @@ This project was inspired by the original `funnebot` by `@Chazoshtare`, written 
 
 3. The release includes a pre-created `sounds` folder with a default `test.wav` file so the bot can start successfully. You can run the executable immediately.
 
+4. When updating to a new version, you only need to replace the old `beepbot.exe` file with the new one. Do not overwrite your configured `config.env` file or the `sounds` folder to avoid losing your data.
+
 ### Audio Requirements
 
-> ⚠️ **Important:** All audio files must be in **`.wav`** format.
+**Important:** All audio files must be in **`.wav`** format.
 > 
-> It is highly recommended to use files with a sample rate of **`44100 Hz`**. The bot can load and play files with other sample rates (e.g., 48000 Hz), but they will play slower and lower because the audio engine is strictly configured for 44100 Hz.
-> 
-> The filename (excluding the `.wav` extension) becomes the command. For example, `omg.wav` is triggered via `!m omg`.
+> * **Sample Rate:** It is highly recommended to use files with a sample rate of **`44100 Hz`**. The bot can load and play files with other sample rates (e.g., 48000 Hz), but they will play slower and lower because the audio engine is strictly configured for 44100 Hz.
+> * **File Duration:** The bot is optimized for short sound effects (memes) ranging from 1 to 10 seconds. Using long music tracks (several minutes long) is highly discouraged, as the bot caches all audio files into RAM for instant, latency-free playback. Loading many long files can significantly overload your computer's RAM.
+> * **Trigger Commands:** The filename (excluding the `.wav` extension) becomes the command. For example, `omg.wav` is triggered via `!m omg`.
 
 ---
 
@@ -102,14 +104,15 @@ Sounds separated by a **space** will play sequentially (one after another) withi
    `CHANNEL=имя_вашего_канала`
 
 3. В релизном архиве уже создана папка `sounds` и в неё вложен тестовый файл `test.wav`, чтобы бот запустился без ошибок. Вы можете запускать бота и сразу тестировать его.
+4. При выходе новой версии достаточно заменить старый файл `beepbot.exe` на новый. Не перезаписывайте уже настроенный файл `config.env` и папку `sounds`, чтобы не потерять свои данные.
 
 ### Требования к звукам
 
-> ⚠️ **Важно:** Все новые звуки должны быть в формате **`.wav`**.
+**Важно:** Все новые звуки должны быть в формате **`.wav`**.
 > 
-> Настоятельно рекомендуется использовать файлы с частотой дискретизации **`44100 Гц`**. Бот сможет проиграть файлы и с другой частотой (например, 48000 Гц), но они будут звучать медленнее и ниже, так как аудиодвижок бота жестко настроен на 44100 Гц.
-> 
-> Название файла (без расширения `.wav`) становится командой для его вызова в чате. Например, файл `omg.wav` будет вызываться командой `!m omg`.
+> * **Частота дискретизации:** Настоятельно рекомендуется использовать файлы с частотой дискретизации **`44100 Гц`**. Бот сможет проиграть файлы и с другой частотой (например, 48000 Гц), но они будут звучать медленнее и ниже, так как аудиодвижок бота жестко настроен на 44100 Гц.
+> * **Длительность файлов:** Бот оптимизирован для работы с короткими звуковыми эффектами (мемами) длительностью от 1 до 10 секунд. Использование длинных музыкальных треков (по несколько минут) настоятельно не рекомендуется, так как бот кэширует все файлы в оперативную память для мгновенного воспроизведения без задержек. Загрузка большого количества длинных файлов может перегрузить ОЗУ вашего компьютера.
+> * **Команды вызова:** Название файла (без расширения `.wav`) становится командой для его вызова в чате. Например, файл `omg.wav` будет вызываться командой `!m omg`.
 
 ---
 

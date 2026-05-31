@@ -2,6 +2,13 @@ package audio
 
 import "github.com/gopxl/beep/v2"
 
+const (
+	delayBufferSize = 8820
+	tailSamplesMax  = 44100
+	dryGain         = 0.85
+	wetGain         = 0.3
+)
+
 type delayStreamer struct {
 	streamer    beep.Streamer
 	lBuffer     []float64
@@ -13,10 +20,10 @@ type delayStreamer struct {
 func applyDelay(streamer beep.Streamer) beep.Streamer {
 	return &delayStreamer{
 		streamer:    streamer,
-		lBuffer:     make([]float64, 8820),
-		rBuffer:     make([]float64, 8820),
+		lBuffer:     make([]float64, delayBufferSize),
+		rBuffer:     make([]float64, delayBufferSize),
 		counter:     0,
-		tailSamples: 44100,
+		tailSamples: tailSamplesMax,
 	}
 }
 
@@ -35,14 +42,14 @@ func (d *delayStreamer) Stream(samples [][2]float64) (n int, ok bool) {
 	i := 0
 	for ; i < limit; i++ {
 		if i < n {
-			samples[i][0] = samples[i][0]*0.85 + d.lBuffer[d.counter]*0.3
+			samples[i][0] = samples[i][0]*dryGain + d.lBuffer[d.counter]*wetGain
 			d.lBuffer[d.counter] = samples[i][0]
-			samples[i][1] = samples[i][1]*0.85 + d.rBuffer[d.counter]*0.3
+			samples[i][1] = samples[i][1]*dryGain + d.rBuffer[d.counter]*wetGain
 			d.rBuffer[d.counter] = samples[i][1]
 		} else {
-			samples[i][0] = d.lBuffer[d.counter] * 0.3
+			samples[i][0] = d.lBuffer[d.counter] * wetGain
 			d.lBuffer[d.counter] = 0.0
-			samples[i][1] = d.rBuffer[d.counter] * 0.3
+			samples[i][1] = d.rBuffer[d.counter] * wetGain
 			d.rBuffer[d.counter] = 0.0
 			d.tailSamples--
 		}

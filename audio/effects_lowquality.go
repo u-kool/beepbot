@@ -6,6 +6,11 @@ import (
 	"github.com/gopxl/beep/v2"
 )
 
+const (
+	sampleHoldInterval = 8
+	bitDepthMultiplier = 64.0
+)
+
 type lqStreamer struct {
 	streamer   beep.Streamer
 	counter    int
@@ -23,7 +28,7 @@ func applyLowQuality(streamer beep.Streamer) beep.Streamer {
 func (l *lqStreamer) Stream(samples [][2]float64) (n int, ok bool) {
 	n, ok = l.streamer.Stream(samples)
 	for i := 0; i < n; i++ {
-		if l.counter == 0 || l.counter == 8 {
+		if l.counter == 0 || l.counter == sampleHoldInterval {
 			l.currSample[0] = samples[i][0]
 			l.currSample[1] = samples[i][1]
 			l.counter = 0
@@ -43,5 +48,5 @@ func (l *lqStreamer) Err() error {
 }
 
 func bitCrash(sample float64) float64 {
-	return math.Round(sample*64.0) / 64.0
+	return math.Round(sample*bitDepthMultiplier) / bitDepthMultiplier
 }
