@@ -5,8 +5,8 @@ import "github.com/gopxl/beep/v2"
 const (
 	delayBufferSize = 8820
 	tailSamplesMax  = 44100
-	dryGain         = 0.85
-	wetGain         = 0.3
+	delayDryGain    = 0.85
+	delayWetGain    = 0.3
 )
 
 type delayStreamer struct {
@@ -42,14 +42,14 @@ func (d *delayStreamer) Stream(samples [][2]float64) (n int, ok bool) {
 	i := 0
 	for ; i < limit; i++ {
 		if i < n {
-			samples[i][0] = samples[i][0]*dryGain + d.lBuffer[d.counter]*wetGain
+			samples[i][0] = samples[i][0]*delayDryGain + d.lBuffer[d.counter]*delayWetGain
 			d.lBuffer[d.counter] = samples[i][0]
-			samples[i][1] = samples[i][1]*dryGain + d.rBuffer[d.counter]*wetGain
+			samples[i][1] = samples[i][1]*delayDryGain + d.rBuffer[d.counter]*delayWetGain
 			d.rBuffer[d.counter] = samples[i][1]
 		} else {
-			samples[i][0] = d.lBuffer[d.counter] * wetGain
+			samples[i][0] = d.lBuffer[d.counter] * delayWetGain
 			d.lBuffer[d.counter] = 0.0
-			samples[i][1] = d.rBuffer[d.counter] * wetGain
+			samples[i][1] = d.rBuffer[d.counter] * delayWetGain
 			d.rBuffer[d.counter] = 0.0
 			d.tailSamples--
 		}
