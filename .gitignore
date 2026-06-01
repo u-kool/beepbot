@@ -2,7 +2,9 @@
 config.env
 *.exe
 beepbot
-/releases
+releases/
 sounds/*
 !sounds/.gitkeep
 *.xml
+archive/
+EFFECTS_GUIDE.md

@@ -17,6 +17,7 @@ type SoundWithParam struct {
 	LowQuality  bool
 	EarRape     bool
 	Delay       bool
+	Vibrato     bool
 	SpeedRatio  int
 }
 
@@ -33,6 +34,7 @@ func CreateSoundWithParam(msg string, trackBuffer map[string]*beep.Buffer, isEar
 		LowQuality:  false,
 		EarRape:     false,
 		Delay:       false,
+		Vibrato:     false,
 		SpeedRatio:  100,
 	}
 	for _, n := range namesSlice {
@@ -103,6 +105,8 @@ func parseParam(soundWithParam *SoundWithParam, params []string) {
 			soundWithParam.EarRape = true
 		case "dl":
 			soundWithParam.Delay = true
+		case "vb":
+			soundWithParam.Vibrato = true
 		case "sp":
 			speedRatio, err := strconv.ParseInt(string(p[2:]), 10, 64)
 			if err != nil {
@@ -157,6 +161,9 @@ func CreateStreamerWithParameter(s *SoundWithParam, trackBuffer map[string]*beep
 	}
 	if s.Delay {
 		streamer = applyDelay(streamer)
+	}
+	if s.Vibrato {
+		streamer = applyVibrato(streamer)
 	}
 	if s.SpeedRatio != 100 {
 		streamer = beep.ResampleRatio(4, float64(s.SpeedRatio)/100.0, streamer)
