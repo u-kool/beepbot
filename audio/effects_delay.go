@@ -6,7 +6,7 @@ const (
 	delayBufferSize = 8820
 	tailSamplesMax  = 44100
 	delayDryGain    = 0.85
-	delayWetGain    = 0.3
+	delayWetGain    = 0.4
 )
 
 type delayStreamer struct {
@@ -42,15 +42,19 @@ func (d *delayStreamer) Stream(samples [][2]float64) (n int, ok bool) {
 	i := 0
 	for ; i < limit; i++ {
 		if i < n {
-			samples[i][0] = samples[i][0]*delayDryGain + d.lBuffer[d.counter]*delayWetGain
-			d.lBuffer[d.counter] = samples[i][0]
-			samples[i][1] = samples[i][1]*delayDryGain + d.rBuffer[d.counter]*delayWetGain
-			d.rBuffer[d.counter] = samples[i][1]
+			echoL := d.lBuffer[d.counter]
+			echoR := d.rBuffer[d.counter]
+			samples[i][0] = samples[i][0]*delayDryGain + echoL*delayWetGain
+			d.rBuffer[d.counter] = samples[i][0]
+			samples[i][1] = samples[i][1]*delayDryGain + echoR*delayWetGain
+			d.lBuffer[d.counter] = samples[i][1]
 		} else {
-			samples[i][0] = d.lBuffer[d.counter] * delayWetGain
-			d.lBuffer[d.counter] = 0.0
-			samples[i][1] = d.rBuffer[d.counter] * delayWetGain
-			d.rBuffer[d.counter] = 0.0
+			echoL := d.lBuffer[d.counter]
+			echoR := d.rBuffer[d.counter]
+			samples[i][0] = echoL * delayWetGain
+			d.rBuffer[d.counter] = samples[i][0]
+			samples[i][1] = echoR * delayWetGain
+			d.lBuffer[d.counter] = samples[i][1]
 			d.tailSamples--
 		}
 		d.counter++
