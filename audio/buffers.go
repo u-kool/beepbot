@@ -57,7 +57,7 @@ func CreateSoundsBuffer() (map[string]*beep.Buffer, []error, error) {
 	return bufferCache, errors, nil
 }
 
-func GetRandomName(buffer map[string]*beep.Buffer) string {
+func getRandomName(buffer map[string]*beep.Buffer) string {
 	if len(buffer) == 0 {
 		return ""
 	}

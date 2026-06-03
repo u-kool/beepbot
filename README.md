@@ -60,8 +60,8 @@ Viewers can modify sounds by appending parameters separated by a hyphen `-` afte
 | Parameter | Effect | Range | Description |
 | --- | --- | --- | --- |
 | `sp[value]` | Speed | 10 - 200 | Playback speed and pitch (Default: 100. `sp150` is faster, `sp50` is slower). |
-| `ct[value]` | Cut | 0 - 100 | Cuts the specified percentage of the sound from the end (e.g., `ct20`). |
-| `sk[value]` | Skip | 0 - 100 | Skips the specified percentage of the sound from the start (e.g., `sk20`). |
+| `cs[value]` | Cut start | 0 - 100 | Skips the specified percentage of the sound from the start (e.g., `cs20`). |
+| `ce[value]` | Cut end | 0 - 100 | Cuts the specified percentage of the sound from the end (e.g., `ce20`). |
 | `rs` | Reverse | - | Plays the sound backward. |
 | `lq` | Low Quality | - | Applies an 8-bit retro sound effect (bitcrushing). |
 | `er` | Ear Rape | - | Applies an extreme volume overdrive (if not globally disabled by `eroff`). |
@@ -147,8 +147,8 @@ Sounds separated by a **space** will play sequentially (one after another) withi
 | Параметр | Эффект | Диапазон | Описание |
 | --- | --- | --- | --- |
 | `sp[число]` | Скорость | 10 - 200 | Скорость и высота воспроизведения (Норма: 100. `sp150` — быстрее и выше, `sp50` — медленнее и ниже). |
-| `ct[число]` | Срез (Cut) | 0 - 100 | Срезать указанный процент звука с конца (например, `ct20` отрежет последние 20% длины). |
-| `sk[число]` | Пропуск | 0 - 100 | Пропустить указанный процент звука с начала (например, `sk20` пропустит первые 20% длины). |
+| `cs[число]` | Срез начала | 0 - 100 | Срезать указанный процент звука с начала (например, `cs20` срежет первые 20% длины). |
+| `ce[число]` | Срез конца | 0 - 100 | Срезать указанный процент звука с конца (например, `ce20` отрежет последние 20% длины). |
 | `rs` | Реверс | - | Проиграть звук задом наперед. |
 | `lq` | Лоу-фай | - | Эффект 8-битного ретро-звука (биткрашинг). |
 | `er` | Перегруз | - | Экстремальный перегруз громкости (работает, только если не заблокирован командой `eroff`). |

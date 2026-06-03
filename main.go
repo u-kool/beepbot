@@ -3,6 +3,7 @@ package main
 import (
 	"beepbot/audio"
 	"beepbot/bot"
+	"beepbot/tts"
 	"fmt"
 	"log"
 	"os"
@@ -37,7 +38,9 @@ func main() {
 		}
 	}
 
-	b := bot.New(channel, soundsBuffer)
+	ttsLanguages := tts.NewTtsLanguages()
+
+	b := bot.New(channel, soundsBuffer, ttsLanguages)
 
 	sr := beep.SampleRate(44100)
 	if err := speaker.Init(sr, sr.N(time.Second/10)); err != nil {

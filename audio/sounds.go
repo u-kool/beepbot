@@ -9,16 +9,16 @@ import (
 )
 
 type SoundWithParam struct {
-	Names       []string
-	CutPercent  int
-	SkipPercent int
-	Reversed    bool
-	Stutter     bool
-	LowQuality  bool
-	EarRape     bool
-	Delay       bool
-	Vibrato     bool
-	SpeedRatio  int
+	names           []string
+	cutStartPercent int
+	cutEndPercent   int
+	reversed        bool
+	stutter         bool
+	lowQuality      bool
+	earRape         bool
+	delay           bool
+	vibrato         bool
+	speedRatio      int
 }
 
 func CreateSoundWithParam(msg string, trackBuffer map[string]*beep.Buffer, isEarOn bool) *SoundWithParam {
@@ -26,21 +26,21 @@ func CreateSoundWithParam(msg string, trackBuffer map[string]*beep.Buffer, isEar
 	names := msgSlice[0]
 	namesSlice := strings.Split(names, "+")
 	soundWithParam := &SoundWithParam{
-		Names:       []string{},
-		CutPercent:  0,
-		SkipPercent: 0,
-		Reversed:    false,
-		Stutter:     false,
-		LowQuality:  false,
-		EarRape:     false,
-		Delay:       false,
-		Vibrato:     false,
-		SpeedRatio:  100,
+		names:           []string{},
+		cutStartPercent: 0,
+		cutEndPercent:   0,
+		reversed:        false,
+		stutter:         false,
+		lowQuality:      false,
+		earRape:         false,
+		delay:           false,
+		vibrato:         false,
+		speedRatio:      100,
 	}
 	for _, n := range namesSlice {
 		if strings.ToLower(n) == "rand" {
-			name := GetRandomName(trackBuffer)
-			soundWithParam.Names = append(soundWithParam.Names, name)
+			name := getRandomName(trackBuffer)
+			soundWithParam.names = append(soundWithParam.names, name)
 			continue
 		}
 
@@ -48,7 +48,7 @@ func CreateSoundWithParam(msg string, trackBuffer map[string]*beep.Buffer, isEar
 		if !ok {
 			continue
 		}
-		soundWithParam.Names = append(soundWithParam.Names, n)
+		soundWithParam.names = append(soundWithParam.names, n)
 	}
 
 	params := msgSlice[1:]
@@ -56,7 +56,7 @@ func CreateSoundWithParam(msg string, trackBuffer map[string]*beep.Buffer, isEar
 	parseParam(soundWithParam, params)
 
 	if !isEarOn {
-		soundWithParam.EarRape = false
+		soundWithParam.earRape = false
 	}
 	return soundWithParam
 }
@@ -67,82 +67,83 @@ func parseParam(soundWithParam *SoundWithParam, params []string) {
 			continue
 		}
 		switch string(p[:2]) {
-		case "ct":
-			cutPercent, err := strconv.ParseInt(string(p[2:]), 10, 64)
+		case "cs":
+			cutStartPercent, err := strconv.ParseInt(string(p[2:]), 10, 64)
 			if err != nil {
 				continue
 			}
-			if cutPercent < 0 {
-				soundWithParam.CutPercent = 0
+			if cutStartPercent < 0 {
+				soundWithParam.cutStartPercent = 0
 				continue
 			}
-			if cutPercent > 100 {
-				soundWithParam.CutPercent = 100
+			if cutStartPercent > 100 {
+				soundWithParam.cutStartPercent = 100
 				continue
 			}
-			soundWithParam.CutPercent = int(cutPercent)
-		case "sk":
-			skipPercent, err := strconv.ParseInt(string(p[2:]), 10, 64)
+			soundWithParam.cutStartPercent = int(cutStartPercent)
+
+		case "ce":
+			cutEndPercent, err := strconv.ParseInt(string(p[2:]), 10, 64)
 			if err != nil {
 				continue
 			}
-			if skipPercent < 0 {
-				soundWithParam.SkipPercent = 0
+			if cutEndPercent < 0 {
+				soundWithParam.cutEndPercent = 0
 				continue
 			}
-			if skipPercent > 100 {
-				soundWithParam.SkipPercent = 100
+			if cutEndPercent > 100 {
+				soundWithParam.cutEndPercent = 100
 				continue
 			}
-			soundWithParam.SkipPercent = int(skipPercent)
+			soundWithParam.cutEndPercent = int(cutEndPercent)
 		case "rs":
-			soundWithParam.Reversed = true
+			soundWithParam.reversed = true
 		case "st":
-			soundWithParam.Stutter = true
+			soundWithParam.stutter = true
 		case "lq":
-			soundWithParam.LowQuality = true
+			soundWithParam.lowQuality = true
 		case "er":
-			soundWithParam.EarRape = true
+			soundWithParam.earRape = true
 		case "dl":
-			soundWithParam.Delay = true
+			soundWithParam.delay = true
 		case "vb":
-			soundWithParam.Vibrato = true
+			soundWithParam.vibrato = true
 		case "sp":
 			speedRatio, err := strconv.ParseInt(string(p[2:]), 10, 64)
 			if err != nil {
 				continue
 			}
 			if speedRatio < 10 {
-				soundWithParam.SpeedRatio = 10
+				soundWithParam.speedRatio = 10
 				continue
 			}
 			if speedRatio > 200 {
-				soundWithParam.SpeedRatio = 200
+				soundWithParam.speedRatio = 200
 				continue
 			}
-			soundWithParam.SpeedRatio = int(speedRatio)
+			soundWithParam.speedRatio = int(speedRatio)
 		}
 	}
 }
 
 func CreateStreamerWithParameter(s *SoundWithParam, trackBuffer map[string]*beep.Buffer) (beep.Streamer, error) {
-	if len(s.Names) < 1 {
+	if len(s.names) < 1 {
 		return nil, errors.New("audio is empty")
 	}
 	var totalLen int
-	streamerSlice := make([]beep.Streamer, 0, len(s.Names))
+	streamerSlice := make([]beep.Streamer, 0, len(s.names))
 	var streamer beep.Streamer
-	for _, name := range s.Names {
+	for _, name := range s.names {
 		currBuffer := trackBuffer[name]
 		totalLen = currBuffer.Len()
-		start := totalLen * s.SkipPercent / 100
-		end := totalLen * (100 - s.CutPercent) / 100
+		start := totalLen * s.cutStartPercent / 100
+		end := totalLen * (100 - s.cutEndPercent) / 100
 		if start >= end {
 			start = 0
 			end = totalLen
 		}
 		var str beep.Streamer
-		if s.Reversed {
+		if s.reversed {
 			str = applyReverse(currBuffer, start, end)
 		} else {
 			str = currBuffer.Streamer(start, end)
@@ -150,23 +151,23 @@ func CreateStreamerWithParameter(s *SoundWithParam, trackBuffer map[string]*beep
 		streamerSlice = append(streamerSlice, str)
 	}
 	streamer = beep.Mix(streamerSlice...)
-	if s.Stutter {
+	if s.stutter {
 		streamer = applyStutter(streamer)
 	}
-	if s.LowQuality {
+	if s.lowQuality {
 		streamer = applyLowQuality(streamer)
 	}
-	if s.EarRape {
+	if s.earRape {
 		streamer = applyEarRape(streamer)
 	}
-	if s.Delay {
+	if s.delay {
 		streamer = applyDelay(streamer)
 	}
-	if s.Vibrato {
+	if s.vibrato {
 		streamer = applyVibrato(streamer)
 	}
-	if s.SpeedRatio != 100 {
-		streamer = beep.ResampleRatio(4, float64(s.SpeedRatio)/100.0, streamer)
+	if s.speedRatio != 100 {
+		streamer = beep.ResampleRatio(4, float64(s.speedRatio)/100.0, streamer)
 	}
 
 	return streamer, nil

@@ -6,7 +6,7 @@ import (
 	"github.com/gempir/go-twitch-irc/v4"
 )
 
-func (b *Bot) HandleMessage(msg twitch.PrivateMessage) {
+func (b *Bot) handleMessage(msg twitch.PrivateMessage) {
 	if len(msg.Message) == 0 || msg.Message[0] != '!' {
 		return
 	}
@@ -19,12 +19,12 @@ func (b *Bot) HandleMessage(msg twitch.PrivateMessage) {
 	command := strings.ToLower(msgSlice[0])
 
 	if command == "!m" {
-		b.PlaySound(msg)
+		b.playSound(msg)
 	}
 }
 
 func (b *Bot) HandleLoop(msgChan <-chan twitch.PrivateMessage) {
 	for msg := range msgChan {
-		b.HandleMessage(msg)
+		b.handleMessage(msg)
 	}
 }
