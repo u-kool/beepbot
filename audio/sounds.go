@@ -21,10 +21,8 @@ type SoundWithParam struct {
 	speedRatio      int
 }
 
-func CreateSoundWithParam(msg string, trackBuffer map[string]*beep.Buffer, isEarOn bool) *SoundWithParam {
-	msgSlice := strings.Split(msg, "-")
-	names := msgSlice[0]
-	namesSlice := strings.Split(names, "+")
+func CreateSoundWithParam(sounds string, effects string, trackBuffer map[string]*beep.Buffer, isEarOn bool) *SoundWithParam {
+	namesSlice := strings.Split(sounds, "+")
 	soundWithParam := &SoundWithParam{
 		names:           []string{},
 		cutStartPercent: 0,
@@ -38,7 +36,8 @@ func CreateSoundWithParam(msg string, trackBuffer map[string]*beep.Buffer, isEar
 		speedRatio:      100,
 	}
 	for _, n := range namesSlice {
-		if strings.ToLower(n) == "rand" {
+		n = strings.ToLower(n)
+		if n == "rand" {
 			name := getRandomName(trackBuffer)
 			soundWithParam.names = append(soundWithParam.names, name)
 			continue
@@ -51,7 +50,7 @@ func CreateSoundWithParam(msg string, trackBuffer map[string]*beep.Buffer, isEar
 		soundWithParam.names = append(soundWithParam.names, n)
 	}
 
-	params := msgSlice[1:]
+	params := strings.Split(effects, "-")
 
 	parseParam(soundWithParam, params)
 
@@ -135,6 +134,9 @@ func CreateStreamerWithParameter(s *SoundWithParam, trackBuffer map[string]*beep
 	var streamer beep.Streamer
 	for _, name := range s.names {
 		currBuffer := trackBuffer[name]
+		if currBuffer == nil {
+			return nil, errors.New("corrupted or empty buffer")
+		}
 		totalLen = currBuffer.Len()
 		start := totalLen * s.cutStartPercent / 100
 		end := totalLen * (100 - s.cutEndPercent) / 100

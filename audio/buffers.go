@@ -47,6 +47,7 @@ func CreateSoundsBuffer() (map[string]*beep.Buffer, []error, error) {
 		trackBuff := beep.NewBuffer(format)
 		trackBuff.Append(track)
 		name := strings.TrimSuffix(fileName, filepath.Ext(fileName))
+		name = strings.ToLower(name)
 		bufferCache[name] = trackBuff
 		data.Close()
 	}
