@@ -35,7 +35,7 @@ func (r *Request) ToBuffer() (*beep.Buffer, error) {
 		return nil, fmt.Errorf("status not ok: %d", resp.StatusCode)
 	}
 
-	data, _, err := mp3.Decode(resp.Body)
+	data, rawFormat, err := mp3.Decode(resp.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -45,8 +45,8 @@ func (r *Request) ToBuffer() (*beep.Buffer, error) {
 		NumChannels: 2,
 		Precision:   2,
 	}
-	oldSr := beep.SampleRate(24000)
-	finalStreamer := beep.Resample(1, oldSr, format.SampleRate, data)
+
+	finalStreamer := beep.Resample(1, rawFormat.SampleRate, format.SampleRate, data)
 
 	finalBuff := beep.NewBuffer(format)
 	finalBuff.Append(finalStreamer)
