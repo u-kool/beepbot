@@ -77,8 +77,8 @@ func (b *Bot) parseMessage(msgSlice []string) []PlayTask {
 				Type: TaskTTS,
 			}
 			for _, lang := range sounds {
-				if _, ok := b.ttsLanguages[lang]; ok {
-					task.Lang = lang
+				if langCode, ok := b.ttsLanguages[lang]; ok {
+					task.Lang = langCode
 					break
 				}
 			}
