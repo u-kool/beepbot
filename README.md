@@ -43,7 +43,7 @@ Viewers can modify any sound or TTS by adding parameters separated by a hyphen `
 
 | Parameter | Effect | Range | Description |
 | --- | --- | --- | --- |
-| `sp[value]` | Speed | 10 - 200 | Playback speed and pitch (Default: `100`). |
+| `sp[value]` | Speed | 10 - 200 | Playback speed and pitch (Default: `100`.`sp150` is faster, `sp50` is slower). |
 | `cs[value]` | Cut start | 0 - 100 | Cuts the specified percentage of the sound from the start (e.g., `cs20`). |
 | `ce[value]` | Cut end | 0 - 100 | Cuts the specified percentage of the sound from the end (e.g., `ce20`). |
 | `rs` | Reverse | — | Plays the sound backward. |
@@ -114,7 +114,7 @@ beepbot — это легкий интерактивный Twitch-бот, кот
 
 | Параметр | Эффект | Диапазон | Описание |
 | --- | --- | --- | --- |
-| `sp[число]` | Скорость | 10 - 200 | Скорость и высота воспроизведения (норма: `100`). |
+| `sp[число]` | Скорость | 10 - 200 | Скорость и высота воспроизведения (норма: `100`. `sp150` — быстрее и выше, `sp50` — медленнее и ниже). |
 | `cs[число]` | Срез начала | 0 - 100 | Отрезать указанный процент звука с начала (например, `cs20`). |
 | `ce[число]` | Срез конца | 0 - 100 | Отрезать указанный процент звука с конца (например, `ce20`). |
 | `rs` | Реверс | — | Воспроизвести звук задом наперед. |
