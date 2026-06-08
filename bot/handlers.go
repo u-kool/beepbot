@@ -7,13 +7,18 @@ import (
 )
 
 func (b *Bot) handleMessage(msg twitch.PrivateMessage) {
-	if len(msg.Message) == 0 || msg.Message[0] != '!' {
+	if len(msg.Message) < 2 || (!strings.HasPrefix(msg.Message, "!") && !strings.HasPrefix(msg.Message, "@")) {
 		return
 	}
 
 	msgSlice := strings.Fields(msg.Message)
 	if len(msgSlice) == 0 {
 		return
+	}
+
+	if len(msgSlice) > 2 && strings.HasPrefix(msgSlice[0], "@") {
+		msgSlice = msgSlice[1:]
+		msg.Message = strings.Join(msgSlice, " ")
 	}
 
 	command := strings.ToLower(msgSlice[0])
