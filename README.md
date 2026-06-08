@@ -71,7 +71,7 @@ Viewers can modify any sound or TTS by adding parameters separated by a hyphen `
 
 <a name="beepbot-russian-version"></a>
 
-# beepbot (v1.1.0)
+# beepbot
 
 beepbot — это легкий интерактивный Twitch-бот, который позволяет зрителям запускать звуковые мемы, озвучивать текст (TTS) на разных языках и накладывать аудиоэффекты.
 

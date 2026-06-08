@@ -23,6 +23,7 @@ func NewTtsLanguages() map[string]string {
 		"es": "es-ES",
 		"pt": "pt-PT",
 		"ro": "ro-RO",
+		"tr": "tr-TR",
 
 		"fi": "fi-FI",
 		"is": "is-IS",
@@ -30,7 +31,7 @@ func NewTtsLanguages() map[string]string {
 		"sv": "sv-SE",
 
 		"ar": "ar-SA",
+
 		"hi": "hi-IN",
-		"tr": "tr-TR",
 	}
 }
