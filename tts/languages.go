@@ -7,7 +7,6 @@ func NewTtsLanguages() map[string]string {
 		"et": "et-EE",
 		"lt": "lt-LT",
 		"lv": "lv-LV",
-		"am": "hy-AM",
 
 		"en": "en-US",
 		"gb": "en-GB",
