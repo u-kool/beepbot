@@ -17,6 +17,8 @@ beepbot is a lightweight, interactive Twitch sound bot that lets your chat trigg
 4. When updating to a new version, you only need to replace the old `beepbot.exe` file with the new one. Do not overwrite your configured `config.env` file or the `sounds` folder to avoid losing your data.
 
 > * **File Duration:** Use short sounds (1–10s). The bot caches all audio into RAM for instant, lag-free playback. Long music tracks will quickly overload your computer's RAM.
+> * The release package already includes a `sounds` folder with a sample `beep.wav` file. You can run the bot immediately and test it in your chat using the `!m beep` command.
+
 
 ---
 
@@ -91,6 +93,7 @@ beepbot — это легкий интерактивный Twitch-бот, кот
 4. При выходе новой версии достаточно заменить старый файл `beepbot.exe` на новый. Не перезаписывайте уже настроенный файл `config.env` и папку `sounds`, чтобы не потерять свои данные.
 
 > * **Длительность звуков:** Используйте короткие звуки (1–10 сек). Бот хранит аудио в ОЗУ для мгновенного воспроизведения. Длинные треки быстро перегрузят оперативную память вашего компьютера.
+> * Релизный архив уже содержит папку `sounds` с тестовым файлом `beep.wav`. Вы можете сразу запустить бота и проверить его работу в чате командой `!m beep`.
 
 ---
 
