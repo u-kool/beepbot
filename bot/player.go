@@ -2,11 +2,16 @@ package bot
 
 import (
 	"beepbot/audio"
+	"log"
+	"math"
+	"strconv"
 	"strings"
 
 	"github.com/gempir/go-twitch-irc/v4"
 	"github.com/gopxl/beep/v2"
+	"github.com/gopxl/beep/v2/effects"
 	"github.com/gopxl/beep/v2/speaker"
+	"github.com/joho/godotenv"
 )
 
 func (b *Bot) playSound(msg twitch.PrivateMessage) {
@@ -102,6 +107,40 @@ func (b *Bot) handleAdminCommand(msg twitch.PrivateMessage, command string) bool
 			b.mtx.Unlock()
 			b.printState()
 			return true
+		case "vol":
+			msgSlice := strings.Fields(msg.Message)
+			if len(msgSlice) < 3 {
+				return false
+			}
+			vRaw := msgSlice[2]
+			v, err := strconv.Atoi(vRaw)
+			if err != nil {
+				return false
+			}
+			if v > 200 {
+				v = 200
+			}
+			if v < 0 {
+				v = 0
+			}
+			b.mtx.Lock()
+			b.volume = v
+			b.mtx.Unlock()
+			b.fileMtx.Lock()
+			defer b.fileMtx.Unlock()
+			envMap, err := godotenv.Read("config.env")
+			if err != nil {
+				log.Println("failed to save volume to config.env:", err)
+				b.printState()
+				return true
+			}
+			envMap["VOLUME"] = strconv.Itoa(v)
+			err = godotenv.Write(envMap, "config.env")
+			if err != nil {
+				log.Println("failed to save volume to config.env:", err)
+			}
+			b.printState()
+			return true
 		}
 	}
 	return false
@@ -123,8 +162,25 @@ func (b *Bot) assembleStreamer(taskSlice []PlayTask) beep.Streamer {
 	if len(streamersSlice) < 1 {
 		return nil
 	}
+	streamer := beep.Seq(streamersSlice...)
 
-	return beep.Seq(streamersSlice...)
+	if b.volume != 100 {
+		vol, silent := getVol(b.volume)
+		streamer = &effects.Volume{
+			Streamer: streamer,
+			Base:     2,
+			Volume:   vol,
+			Silent:   silent,
+		}
+	}
+	return streamer
+}
+
+func getVol(vol int) (float64, bool) {
+	if vol == 0 {
+		return 0, true
+	}
+	return math.Log2(float64(vol) / 100), false
 }
 
 func (b *Bot) pushToQueue(s beep.Streamer) {

@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/gempir/go-twitch-irc/v4"
@@ -28,6 +29,19 @@ func main() {
 		exitWithError(finalErr)
 	}
 
+	volume, err := strconv.Atoi(os.Getenv("VOLUME"))
+	if err != nil {
+		volume = 100
+	}
+
+	if volume > 200 {
+		volume = 200
+	}
+
+	if volume < 0 {
+		volume = 0
+	}
+
 	soundsBuffer, errors, err := audio.CreateSoundsBuffer()
 	if err != nil {
 		log.Println("sounds folder missing/empty; TTS only active")
@@ -40,7 +54,7 @@ func main() {
 
 	ttsLanguages := tts.NewTtsLanguages()
 
-	b := bot.New(channel, soundsBuffer, ttsLanguages)
+	b := bot.New(channel, soundsBuffer, ttsLanguages, volume)
 
 	sr := beep.SampleRate(44100)
 	if err := speaker.Init(sr, sr.N(time.Second/10)); err != nil {

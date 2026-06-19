@@ -2,16 +2,19 @@
 
 Inspired by `funnebot` by `@Chazoshtare`
 
+
+
 # beepbot
 
 beepbot is a lightweight, interactive Twitch sound bot that lets your chat trigger custom sound memes, generate text-to-speech (TTS) voices in multiple languages, and apply audio effects.
+
+> ℹ️ **Volume Control (v1.2.0):** Change volume on the fly with `!m vol [0-200]`— it automatically saves to `config.env` (ensure the bot has write permissions). You can also set it at startup via `VOLUME=`.
 
 ---
 
 ## Setup & Launch
 
-1. Open `config.env` with a text editor and enter your Twitch channel name:
-   `CHANNEL=your_channel_name`
+1. Open `config.env` with a text editor, enter your Twitch channel name (`CHANNEL=your_channel_name`), and optionally set your starting volume (`VOLUME=100`, range 0-200).
 2. Place your sound files in **`.wav`** format (44100 Hz recommended) into the `sounds` folder. The filename (excluding the `.wav` extension) automatically becomes the chat command.
 3. Run the executable file.
 4. When updating to a new version, you only need to replace the old `beepbot.exe` file with the new one. Do not overwrite your configured `config.env` file or the `sounds` folder to avoid losing your data.
@@ -74,21 +77,25 @@ Viewers can modify any sound or TTS by adding parameters separated by a hyphen `
 | `!m eron` / `eroff` | Enables / disables global ear safety (strictly blocks the `er` effect). |
 | `!m stop` | Instantly stops currently playing sound and clears the entire queue. |
 | `!m skip` | Instantly interrupts current sound and plays the next queued item. |
+| `!m vol [value]` | Sets the master volume of the bot (range: 0-200, default: 100). The setting is automatically saved. |
 
 ***
 
 <a name="beepbot-russian-version"></a>
 
+> ℹ️ **Громкость (v1.2.0):** Меняйте громкость на лету командой `!m vol [0-200]`— значение автоматически запишется в `config.env`(убедитесь, что у бота есть права на запись). Также громкость можно задать при старте через `VOLUME=`.
+
 # beepbot
 
 beepbot — это легкий интерактивный Twitch-бот, который позволяет зрителям запускать звуковые мемы, озвучивать текст (TTS) на разных языках и накладывать аудиоэффекты.
+
+> ℹ️ **Громкость (v1.2.0):** Меняйте громкость на лету командой `!m vol [0-200]`— значение автоматически запишется в `config.env`(убедитесь, что у бота есть права на запись). Также громкость можно задать при старте через `VOLUME=`.
 
 ---
 
 ## Настройка и запуск
 
-1. Откройте файл `config.env` текстовым редактором и впишите имя вашего Twitch-канала:
-   `CHANNEL=имя_вашего_канала`
+1. Откройте файл `config.env` текстовым редактором, впишите имя вашего Twitch-канала (`CHANNEL=имя_вашего_канала`) и, по желанию, стартовую громкость (`VOLUME=100`, диапазон 0-200).
 2. Положите свои аудиофайлы в формате **`.wav`** (рекомендуется частота 44100 Гц) в папку `sounds`. Название файла (без расширения) становится командой вызова.
 3. Запустите исполняемый файл бота.
 4. При выходе новой версии достаточно заменить старый файл `beepbot.exe` на новый. Не перезаписывайте уже настроенный файл `config.env` и папку `sounds`, чтобы не потерять свои данные.
@@ -150,3 +157,4 @@ beepbot — это легкий интерактивный Twitch-бот, кот
 | `!m eron` / `eroff` | Включить / выключить глобальную безопасность ушей (блокирует эффект `er` для всех). |
 | `!m stop` | Мгновенно выключить текущий звук и полностью очистить очередь. |
 | `!m skip` | Прервать текущий звук и запустить следующий из очереди. |
+| `!m vol [число]` | Устанавливает общую громкость бота (диапазон: 0-200, норма: 100). Значение автоматически сохраняется. |
