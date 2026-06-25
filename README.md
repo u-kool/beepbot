@@ -15,7 +15,7 @@ beepbot is a lightweight, interactive Twitch sound bot that lets your chat trigg
 ## Setup & Launch
 
 1. Open `config.env` with a text editor, enter your Twitch channel name (`CHANNEL=your_channel_name`), and optionally set your starting volume (`VOLUME=100`, range 0-200).
-2. Place your sound files in **`.wav`** format (44100 Hz recommended) into the `sounds` folder. The filename (excluding the `.wav` extension) automatically becomes the chat command.
+2. Place your sound files in **`.wav`** or **`.mp3`** format (44100 Hz recommended) into the `sounds` folder. The filename (excluding the extension) automatically becomes the chat command.
 3. Run the executable file.
 4. When updating to a new version, you only need to replace the old `beepbot.exe` file with the new one. Do not overwrite your configured `config.env` file or the `sounds` folder to avoid losing your data.
 
@@ -96,7 +96,7 @@ beepbot — это легкий интерактивный Twitch-бот, кот
 ## Настройка и запуск
 
 1. Откройте файл `config.env` текстовым редактором, впишите имя вашего Twitch-канала (`CHANNEL=имя_вашего_канала`) и, по желанию, стартовую громкость (`VOLUME=100`, диапазон 0-200).
-2. Положите свои аудиофайлы в формате **`.wav`** (рекомендуется частота 44100 Гц) в папку `sounds`. Название файла (без расширения) становится командой вызова.
+2. Положите свои аудиофайлы в формате **`.wav`** или **`.mp3`** (рекомендуется частота 44100 Гц) в папку `sounds`. Название файла (без расширения) становится командой вызова.
 3. Запустите исполняемый файл бота.
 4. При выходе новой версии достаточно заменить старый файл `beepbot.exe` на новый. Не перезаписывайте уже настроенный файл `config.env` и папку `sounds`, чтобы не потерять свои данные.
 

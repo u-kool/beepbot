@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/gopxl/beep/v2"
+	"github.com/gopxl/beep/v2/mp3"
 	"github.com/gopxl/beep/v2/wav"
 )
 
@@ -28,7 +29,7 @@ func CreateSoundsBuffer() (map[string]*beep.Buffer, []error, error) {
 	for _, file := range dir {
 		fileName := file.Name()
 
-		if filepath.Ext(fileName) != ".wav" {
+		if filepath.Ext(fileName) != ".wav" && filepath.Ext(fileName) != ".mp3" {
 			continue
 		}
 		data, err := os.Open("./sounds/" + fileName)
@@ -37,7 +38,21 @@ func CreateSoundsBuffer() (map[string]*beep.Buffer, []error, error) {
 			errors = append(errors, e)
 			continue
 		}
-		track, rawFormat, err := wav.Decode(data)
+
+		check := checkSoundFormat(data)
+
+		var track beep.StreamSeekCloser
+		var rawFormat beep.Format
+		switch check {
+		case "wav":
+			track, rawFormat, err = wav.Decode(data)
+		case "mp3":
+			track, rawFormat, err = mp3.Decode(data)
+		default:
+			data.Close()
+			continue
+		}
+
 		if err != nil {
 			e := fmt.Errorf("failed to decode audio file: %w", err)
 			errors = append(errors, e)
@@ -79,4 +94,26 @@ func getRandomName(buffer map[string]*beep.Buffer) string {
 		i++
 	}
 	return finalName
+}
+
+func checkSoundFormat(data *os.File) string {
+	defer data.Seek(0, 0)
+	var check [12]byte
+
+	_, err := data.Read(check[:])
+	if err != nil {
+		return ""
+	}
+	firstWavCheck := string(check[0:4])
+	secWavCheck := string(check[8:12])
+
+	firstMp3Check := string(check[0:3])
+
+	if firstWavCheck == "RIFF" && secWavCheck == "WAVE" {
+		return "wav"
+	}
+	if firstMp3Check == "ID3" || (check[0] == 0xff && check[1] >= 0xf0) {
+		return "mp3"
+	}
+	return ""
 }
