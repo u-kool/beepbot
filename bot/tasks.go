@@ -108,6 +108,14 @@ func (b *Bot) resolveTasks(taskSlice []PlayTask) ([]PlayTask, []string) {
 	keysToDelete := make([]string, 0, len(taskSlice))
 	for i := range taskSlice {
 		if taskSlice[i].Type == TaskTTS {
+			eff, translated := tts.NeedTranslate(taskSlice[i].Effects)
+			if translated {
+				taskSlice[i].Effects = eff
+				translation, err := tts.Translate(taskSlice[i].Lang, taskSlice[i].Content)
+				if err == nil && translation != "" {
+					taskSlice[i].Content = translation
+				}
+			}
 			req := tts.New(taskSlice[i].Lang, taskSlice[i].Content)
 			tempKey := fmt.Sprintf("tts_temp_%d", b.ttsCounter.Add(1))
 			task := ttsTask{tempKey, req}

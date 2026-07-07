@@ -8,7 +8,13 @@ Inspired by `funnebot` by `@Chazoshtare`
 
 beepbot is a lightweight, interactive Twitch sound bot that lets your chat trigger custom sound memes, generate text-to-speech (TTS) voices in multiple languages, and apply audio effects.
 
-> ℹ️ **Volume Control (v1.2.0):** Change volume on the fly with `!m vol [0-200]`— it automatically saves to `config.env` (ensure the bot has write permissions). You can also set it at startup via `VOLUME=`.
+> ℹ️ **Translation (v1.4.0):** Now you can translate the text by appending the `-tr` modifier to the language code:
+> * `!m en hello chat` — read the text in English.
+> * `!m ru-tr hello my friend` — translate the text to Russian ("привет, мой друг") and speak it with the Russian voice.
+
+> Note that translating (`-tr`) may expand your text, potentially cutting it off earlier. [More about limit](#tts-limit-en)
+
+> ℹ️ **Volume Control (v1.2.0):** Change volume with `!m vol [0-200]`— it automatically saves to `config.env` (ensure the bot has write permissions). You can also set it at startup via `VOLUME=`.
 
 ---
 
@@ -61,10 +67,17 @@ Viewers can modify any sound or TTS by adding parameters separated by a hyphen `
 | `dl` | Delay | — | Applies a decaying echo effect. |
 | `vb` | Vibrato | — | Applies a pitch-vibrating effect. |
 | `ga` | Gacha | — | Randomly adds unused effects. The number of added effects depends on how many you already specified (if you have already specified 3 or more, no effects are added unless you trigger a rare 5% jackpot, which adds 1 more) |
+| `tr` | Translation | — | **TTS only.** Translates the text into the target language (e.g., `ru-tr hello`). |
 
 *(Examples: `!m ru-sp150 hello`, `!m omg-ga`)*
 
 > ℹ️ *Note:* Trimming (cs/ce) is always applied to the original sound first, before any other effects are processed.
+
+<a name="tts-limit-en"></a>
+
+>  **TTS Length Limit (200 chars):** Due to using free web API it has a strict 200-character limit per request. To bypass this limit, chain multiple TTS commands sequentially in one message:
+> * ❌ `!m ru long_text_300_chars` (Bad - will be truncated to 200 chars).
+> *  `!m ru text_150_chars ru text_150_chars` (Excellent - plays seamlessly).
 
 ---
 
@@ -83,13 +96,17 @@ Viewers can modify any sound or TTS by adding parameters separated by a hyphen `
 
 <a name="beepbot-russian-version"></a>
 
-> ℹ️ **Громкость (v1.2.0):** Меняйте громкость на лету командой `!m vol [0-200]`— значение автоматически запишется в `config.env`(убедитесь, что у бота есть права на запись). Также громкость можно задать при старте через `VOLUME=`.
-
 # beepbot
 
 beepbot — это легкий интерактивный Twitch-бот, который позволяет зрителям запускать звуковые мемы, озвучивать текст (TTS) на разных языках и накладывать аудиоэффекты.
 
-> ℹ️ **Громкость (v1.2.0):** Меняйте громкость на лету командой `!m vol [0-200]`— значение автоматически запишется в `config.env`(убедитесь, что у бота есть права на запись). Также громкость можно задать при старте через `VOLUME=`.
+> ℹ️ **Переводчик (v1.4.0):** Теперь вы можете переводить текст, добавив модификатор `-tr` к коду языка:
+> * `!m en hello chat` — озвучить текст на английском.
+> * `!m ru-tr hello my friend` — автоматически перевести английский текст на русский («привет, мой друг») и озвучить его русским голосом.
+
+> Учтите, что перевод (`-tr`) может удлинить ваш текст, из-за чего он обрежется раньше. [Подробнее про лимит](#tts-limit-ru)
+
+> ℹ️ **Громкость (v1.2.0):** Меняйте громкость командой `!m vol [0-200]`— значение автоматически запишется в `config.env`(убедитесь, что у бота есть права на запись). Также громкость можно задать при старте через `VOLUME=`.
 
 ---
 
@@ -141,10 +158,17 @@ beepbot — это легкий интерактивный Twitch-бот, кот
 | `dl` | Эхо (Delay) | — | Эффект плавного затухающего эхо. |
 | `vb` | Вибрация | — | Эффект плавного дрожания частоты (Vibrato). |
 | `ga` | Гача (Gacha) | — | Случайно добавляет неиспользованные эффекты. Количество зависит от того, сколько эффектов вы уже ввели вручную (если введено 3 или более, не добавится ничего, кроме редкого 5% шанса сорвать джекпот и получить +1 эффект). |
+| `tr` | Перевод | — | **Только для TTS.** Переводит текст на указанный язык (например, `ru-tr hello`). |
 
 *(Примеры: `!m ru-sp150 привет`, `!m omg-ga`)*
 
 > ℹ️ *Примечание:* Обрезка (cs/ce) всегда применяется к исходному звуку первой, до наложения любых других эффектов.
+
+<a name="tts-limit-ru"></a>
+
+>  **Лимит длины TTS (200 симв.):** Из-за использования бесплатного API лимит озвучки для одного куска текста — строго 200 символов. Чтобы обойти это ограничение, склеивайте команды цепочкой:
+> * ❌ `!m ru-sp150 длинный_текст_300_символов` (Плохо — обрежется до 200 симв.).
+> *  `!m ru-sp150 текст_150_символов ru-sp150 текст_150_символов` (Отлично — проиграется без швов).
 
 ---
 
