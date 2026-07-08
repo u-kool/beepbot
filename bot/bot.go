@@ -18,6 +18,7 @@ type Bot struct {
 	queue          []beep.Streamer
 	queueEnabled   bool
 	queueIsPlaying bool
+	isPlayingSound bool
 	speakerIsMuted bool
 	erIsOn         bool
 	ttsLanguages   map[string]string
@@ -33,6 +34,7 @@ func New(channel string, soundsBuffer map[string]*beep.Buffer, ttsLanguages map[
 		queue:          make([]beep.Streamer, 0, 50),
 		queueEnabled:   false,
 		queueIsPlaying: false,
+		isPlayingSound: false,
 		speakerIsMuted: false,
 		erIsOn:         true,
 		ttsLanguages:   ttsLanguages,
