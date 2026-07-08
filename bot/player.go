@@ -60,6 +60,7 @@ func (b *Bot) handleAdminCommand(msg twitch.PrivateMessage, command string) bool
 			b.mtx.Lock()
 			b.queue = b.queue[:0]
 			b.queueIsPlaying = false
+			b.isPlayingSound = false
 			b.mtx.Unlock()
 			b.printState()
 			return true
@@ -80,9 +81,19 @@ func (b *Bot) handleAdminCommand(msg twitch.PrivateMessage, command string) bool
 			b.mtx.Lock()
 			b.queue = b.queue[:0]
 			b.queueIsPlaying = false
+			b.isPlayingSound = false
 			b.mtx.Unlock()
 			return true
 		case "skip":
+			if b.IsQueueEnabled() {
+				b.mtx.Lock()
+				if b.isPlayingSound == false {
+					b.mtx.Unlock()
+					return true
+				}
+				b.isPlayingSound = false
+				b.mtx.Unlock()
+			}
 			speaker.Clear()
 			if b.IsQueueEnabled() {
 				b.mtx.Lock()
@@ -212,8 +223,13 @@ func (b *Bot) playNext() {
 
 	b.queue = b.queue[1:]
 
+	b.isPlayingSound = true
+
 	b.mtx.Unlock()
 	speaker.Play(beep.Seq(nextSound, beep.Callback(func() {
+		b.mtx.Lock()
+		b.isPlayingSound = false
+		b.mtx.Unlock()
 		go b.playNext()
 	})))
 }
