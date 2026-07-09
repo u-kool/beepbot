@@ -4,10 +4,15 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"time"
 
 	"github.com/gopxl/beep/v2"
 	"github.com/gopxl/beep/v2/mp3"
 )
+
+var httpClient = &http.Client{
+	Timeout: 5 * time.Second,
+}
 
 type Request struct {
 	lang string
@@ -29,7 +34,7 @@ func (r *Request) ToBuffer() (*beep.Buffer, error) {
 	}
 	reqUrl := getUrlRequest(r.lang, r.text)
 
-	resp, err := http.Get(reqUrl)
+	resp, err := httpClient.Get(reqUrl)
 	if err != nil {
 		return nil, err
 	}
