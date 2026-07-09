@@ -35,7 +35,7 @@ func getTranslateReq(lang, text string) string {
 func Translate(lang, text string) (string, error) {
 	reqUrl := getTranslateReq(lang, text)
 
-	resp, err := http.Get(reqUrl)
+	resp, err := httpClient.Get(reqUrl)
 	if err != nil {
 		return "", err
 	}
@@ -57,6 +57,9 @@ func Translate(lang, text string) (string, error) {
 	err = json.Unmarshal(data, &result)
 	if err != nil {
 		return "", fmt.Errorf("can't decode data: %v", err)
+	}
+	if len(result) == 0 {
+		return "", errors.New("empty translate response")
 	}
 	var finalResult string
 
