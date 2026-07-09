@@ -2,6 +2,8 @@ package audio
 
 import "github.com/gopxl/beep/v2"
 
+const maxReverseSamples = 2646000
+
 type reversedStreamer struct {
 	data [][2]float64
 	pos  int
