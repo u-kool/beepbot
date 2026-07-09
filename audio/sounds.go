@@ -285,11 +285,11 @@ func CreateStreamerWithParameter(s *SoundWithParam, trackBuffer map[string]*beep
 			start = 0
 			end = totalLen
 		}
-		if s.reversed && (end-start > maxReverseSamples) {
-			end = start + maxReverseSamples
-		}
 		var str beep.Streamer
 		if s.reversed {
+			if end-start > maxReverseSamples {
+				end = start + maxReverseSamples
+			}
 			str = applyReverse(currBuffer, start, end)
 		} else {
 			str = currBuffer.Streamer(start, end)
