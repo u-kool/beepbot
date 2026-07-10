@@ -17,8 +17,10 @@ type PlayTask struct {
 }
 
 type ttsTask struct {
-	tempKey string
-	req     *tts.Request
+	tempKey       string
+	lang          string
+	text          string
+	needTranslate bool
 }
 
 const (
@@ -111,14 +113,9 @@ func (b *Bot) resolveTasks(taskSlice []PlayTask) ([]PlayTask, []string) {
 			eff, translated := tts.NeedTranslate(taskSlice[i].Effects)
 			if translated {
 				taskSlice[i].Effects = eff
-				translation, err := tts.Translate(taskSlice[i].Lang, taskSlice[i].Content)
-				if err == nil && translation != "" {
-					taskSlice[i].Content = translation
-				}
 			}
-			req := tts.New(taskSlice[i].Lang, taskSlice[i].Content)
 			tempKey := fmt.Sprintf("tts_temp_%d", b.ttsCounter.Add(1))
-			task := ttsTask{tempKey, req}
+			task := ttsTask{tempKey, taskSlice[i].Lang, taskSlice[i].Content, translated}
 			taskSlice[i].Content = tempKey
 			taskSlice[i].Type = TaskSound
 			keysToDelete = append(keysToDelete, tempKey)
@@ -132,11 +129,18 @@ func (b *Bot) resolveTasks(taskSlice []PlayTask) ([]PlayTask, []string) {
 
 func (b *Bot) downloadTtsTask(t ttsTask, wg *sync.WaitGroup) {
 	defer wg.Done()
-	buf, err := t.req.ToBuffer()
+	if t.needTranslate {
+		translatedText, err := tts.Translate(t.lang, t.text)
+		if translatedText != "" && err == nil {
+			t.text = translatedText
+		}
+	}
+	req := tts.New(t.lang, t.text)
+	buff, err := req.ToBuffer()
 	if err != nil {
 		return
 	}
 	b.mtx.Lock()
-	b.soundsBuffer[t.tempKey] = buf
+	b.soundsBuffer[t.tempKey] = buff
 	b.mtx.Unlock()
 }
