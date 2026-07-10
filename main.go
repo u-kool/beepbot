@@ -64,7 +64,7 @@ func main() {
 
 	msgChan := make(chan twitch.PrivateMessage, 500)
 
-	for range 5 {
+	for range 20 {
 		go b.HandleLoop(msgChan)
 	}
 
