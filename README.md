@@ -1,33 +1,57 @@
-[RU](#beepbot-russian-version)
+[RU](#beepbot-c--fork-russian-version)
 
-Inspired by `funnebot` by `@Chazoshtare`
+Based on [beepbot](https://github.com/Chazoshtare/beepbot) by `@Chazoshtare`
 
+---
 
+# beepbot (C# Fork)
 
-# beepbot
+A ground-up C# rewrite of the original Go-based beepbot. This is a lightweight, interactive Twitch sound bot that runs as a **system tray application** with a full GUI. It lets your chat trigger custom sound memes, generate text-to-speech (TTS) voices in multiple languages, and apply audio effects — all controlled from the system tray or global hotkeys.
 
-beepbot is a lightweight, interactive Twitch sound bot that lets your chat trigger custom sound memes, generate text-to-speech (TTS) voices in multiple languages, and apply audio effects.
+> **Original:** Go console app → **This fork:** C# / .NET 8 / Windows Forms tray app
 
-> ℹ️ **Translation (v1.4.0):** Now you can translate the text by appending the `-tr` modifier to the language code:
-> * `!m en hello chat` — read the text in English.
-> * `!m ru-tr hello my friend` — translate the text to Russian ("привет, мой друг") and speak it with the Russian voice.
+### What's new vs the original beepbot
 
-> Note that translating (`-tr`) may expand your text, potentially cutting it off earlier. [More about limit](#tts-limit-en)
-
-> ℹ️ **Volume Control (v1.2.0):** Change volume with `!m vol [0-200]`— it automatically saves to `config.env` (ensure the bot has write permissions). You can also set it at startup via `VOLUME=`.
+| Feature | Description |
+|---------|-------------|
+| **System Tray GUI** | Runs as a tray icon with full context menu — no console window |
+| **Sound Browser** | Browse, preview, drag-and-drop import, rename, and delete sounds directly from the GUI |
+| **Dark-themed UI** | All forms use a consistent deep blue/red dark theme |
+| **Volume Slider** | Custom volume form with slider + text input (0–200%) |
+| **Audio Device Selection** | Pick a specific WASAPI output device from a list |
+| **Auto-Translate Users** | Ctrl+T translates a user's last message and auto-translates all future messages from them to TTS |
+| **Global Hotkeys** | `Ctrl+T` (translate), `Ctrl+M` (mute), `Alt+M` (skip), `Ctrl+Alt+M` (stop) |
+| **Connection Sounds** | Configurable connect/leave/error sounds with TTS command templates (`{CHANNEL}` placeholder) |
+| **Persistent Config** | All settings (channel, volume, device, translate lang) are saved to `config.env` on change |
+| **Anonymous IRC** | Connects to Twitch anonymously via TLS — no OAuth token needed |
+| **Test Mode** | Run `--test` to test all 15 effect combinations against a test WAV file |
 
 ---
 
 ## Setup & Launch
 
-1. Open `config.env` with a text editor, enter your Twitch channel name (`CHANNEL=your_channel_name`), and optionally set your starting volume (`VOLUME=100`, range 0-200).
+1. Open `config.env` with a text editor, enter your Twitch channel name (`CHANNEL=your_channel_name`), and optionally set your starting volume (`VOLUME=100`, range 0–200).
 2. Place your sound files in **`.wav`** or **`.mp3`** format (44100 Hz recommended) into the `sounds` folder. The filename (excluding the extension) automatically becomes the chat command.
-3. Run the executable file.
-4. When updating to a new version, you only need to replace the old `beepbot.exe` file with the new one. Do not overwrite your configured `config.env` file or the `sounds` folder to avoid losing your data.
+3. Run `beepbot.exe`. A purple "b" icon will appear in the system tray.
+4. When updating, replace `beepbot.exe` only. Do not overwrite your `config.env` or `sounds` folder.
 
-> * **File Duration:** Use short sounds (1–10s). The bot caches all audio into RAM for instant, lag-free playback. Long music tracks will quickly overload your computer's RAM.
-> * The release package already includes a `sounds` folder with a sample `beep.wav` file. You can run the bot immediately and test it in your chat using the `!m beep` command.
+> * **File Duration:** Use short sounds (1–10s). The bot caches all audio into RAM for instant playback. Long music tracks will overload your RAM.
+> * The `sounds` folder includes a sample `beep.wav` file. Test it with `!m beep` in chat.
 
+---
+
+## Configuration (`config.env`)
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `CHANNEL` | *(empty)* | Twitch channel to join (without `#`) |
+| `VOLUME` | `100` | Master volume (0–200) |
+| `DEVICE_ID` | *(empty)* | WASAPI output device ID (empty = system default) |
+| `TRANSLATE_LANG` | `ru` | Target language for auto-translate |
+| `SOUND_CONNECT` | `connect.wav` | Sound played when opening settings |
+| `SOUND_CONNECTED` | `!m ru-sp150-st success ru-lq-sp150-st коннект ru-sp150-dl {CHANNEL}` | Command executed on successful connection (supports `{CHANNEL}` template) |
+| `SOUND_LEAVE` | `leave.wav` | Sound played on exit/close |
+| `SOUND_ERROR` | `nepravilno.wav` | Sound played on connection error |
 
 ---
 
@@ -43,11 +67,14 @@ Specify the language code before the text you want to read:
 * `!m en hello chat` — read the text in English.
 * `!m jp ohayo` — read the text in Japanese.
 
-[Full list of supported languages](tts/languages.go)
+[Full list of supported languages](Tts/Languages.cs)
 
 ### 2. Combining Sounds & Speech
-* **Simultaneous Mix (using `+`):** `!m sound1+sound2-rs` (both sounds will play at the exact same time, reversed).
-* **Sequential Chain (using spaces):** `!m sound1-sp150 en hello sound2` (plays sped-up sound1, then reads "hello" in English, and finally plays sound2).
+* **Simultaneous Mix (using `+`):** `!m sound1+sound2-rs` (both sounds play at the exact same time, reversed).
+* **Sequential Chain (using spaces):** `!m sound1-sp150 en hello sound2` (plays sped-up sound1, then reads "hello" in English, then plays sound2).
+
+### 3. Translation
+* `!m en-tr hello my friend` — translate English text to Russian and speak it with the Russian voice.
 
 ---
 
@@ -56,69 +83,113 @@ Specify the language code before the text you want to read:
 Viewers can modify any sound or TTS by adding parameters separated by a hyphen `-` (order does not matter):
 
 | Parameter | Effect | Range | Description |
-| --- | --- | --- | --- |
-| `sp[value]` | Speed | 10 - 200 | Playback speed and pitch (Default: `100`.`sp150` is faster, `sp50` is slower). |
-| `cs[value]` | Cut start | 0 - 100 | Cuts the specified percentage of the sound from the start (e.g., `cs20`). |
-| `ce[value]` | Cut end | 0 - 100 | Cuts the specified percentage of the sound from the end (e.g., `ce20`). |
+|-----------|--------|-------|-------------|
+| `sp[value]` | Speed | 10–200 | Playback speed and pitch (Default: `100`. `sp150` is faster, `sp50` slower). |
+| `cs[value]` | Cut start | 0–100 | Cuts the specified percentage from the start (e.g., `cs20`). |
+| `ce[value]` | Cut end | 0–100 | Cuts the specified percentage from the end (e.g., `ce20`). |
 | `rs` | Reverse | — | Plays the sound backward. |
-| `lq` | Low Quality | — | Applies an 8-bit retro sound effect (bitcrushing). |
-| `st` | Stutter | — | Applies a rapid stutter effect to the beginning of the sound. |
-| `er` | Ear Rape | — | Applies an extreme volume overdrive. |
-| `dl` | Delay | — | Applies a decaying echo effect. |
-| `vb` | Vibrato | — | Applies a pitch-vibrating effect. |
-| `ga` | Gacha | — | Randomly adds unused effects. The number of added effects depends on how many you already specified (if you have already specified 3 or more, no effects are added unless you trigger a rare 5% jackpot, which adds 1 more) |
-| `tr` | Translation | — | **TTS only.** Translates the text into the target language (e.g., `ru-tr hello`). |
+| `lq` | Low Quality | — | 8-bit retro sound effect (bitcrushing). |
+| `st` | Stutter | — | Rapid stutter effect at the beginning. |
+| `er` | Ear Rape | — | Extreme volume overdrive. |
+| `dl` | Delay | — | Decaying echo effect. |
+| `vb` | Vibrato | — | Pitch-vibrating effect. |
+| `ga` | Gacha | — | Randomly adds unused effects. Added count depends on how many you already specified (3+ = nothing, unless 5% jackpot). |
+| `tr` | Translation | — | **TTS only.** Translates text to the target language. |
 
 *(Examples: `!m ru-sp150 hello`, `!m omg-ga`)*
 
-> ℹ️ *Note:* Trimming (cs/ce) is always applied to the original sound first, before any other effects are processed.
+> *Note:* Trimming (cs/ce) is always applied first, before any other effects.
 
-<a name="tts-limit-en"></a>
-
->  **TTS Length Limit (200 chars):** Due to using free web API it has a strict 200-character limit per request. To bypass this limit, chain multiple TTS commands sequentially in one message:
-> * ❌ `!m ru long_text_300_chars` (Bad - will be truncated to 200 chars).
-> *  `!m ru text_150_chars ru text_150_chars` (Excellent - plays seamlessly).
+> **TTS Length Limit (200 chars):** The free Google TTS API has a 200-character limit. Chain multiple TTS commands to bypass:
+> * ❌ `!m ru long_text_300_chars` (truncated to 200 chars).
+> * ✅ `!m ru text_150_chars ru text_150_chars` (plays seamlessly).
 
 ---
 
 ## Admin Commands (Broadcaster & Moderators Only)
 
 | Command | Description |
-| --- | --- |
-| `!m mute` / `unmute` | Mutes / unmutes the bot (instantly stops audio, clears the queue). |
-| `!m qon` / `qoff` | Enables / disables sequential queue (if `qoff`, sounds will overlap concurrently). |
-| `!m eron` / `eroff` | Enables / disables global ear safety (strictly blocks the `er` effect). |
-| `!m stop` | Instantly stops currently playing sound and clears the entire queue. |
-| `!m skip` | Instantly interrupts current sound and plays the next queued item. |
-| `!m vol [value]` | Sets the master volume of the bot (range: 0-200, default: 100). The setting is automatically saved. |
+|---------|-------------|
+| `!m mute` / `unmute` | Mutes / unmutes the bot (stops audio, clears queue). |
+| `!m qon` / `qoff` | Enables / disables sequential queue (if `qoff`, sounds overlap concurrently). |
+| `!m eron` / `eroff` | Enables / disables global ear safety (blocks `er` effect). |
+| `!m stop` | Instantly stops playback and clears the queue. |
+| `!m skip` | Interrupts current sound and plays the next queued item. |
+| `!m vol [value]` | Sets master volume (0–200, default: 100). Auto-saved. |
 
-***
+---
 
-<a name="beepbot-russian-version"></a>
+## Building from Source
 
-# beepbot
+Requirements: .NET 8 SDK
 
-beepbot — это легкий интерактивный Twitch-бот, который позволяет зрителям запускать звуковые мемы, озвучивать текст (TTS) на разных языках и накладывать аудиоэффекты.
+```
+dotnet publish -c Release -r win-x64 --self-contained -p:PublishSingleFile=true
+```
 
-> ℹ️ **Переводчик (v1.4.0):** Теперь вы можете переводить текст, добавив модификатор `-tr` к коду языка:
-> * `!m en hello chat` — озвучить текст на английском.
-> * `!m ru-tr hello my friend` — автоматически перевести английский текст на русский («привет, мой друг») и озвучить его русским голосом.
+Or use the included `publish.bat` script.
 
-> Учтите, что перевод (`-tr`) может удлинить ваш текст, из-за чего он обрежется раньше. [Подробнее про лимит](#tts-limit-ru)
+---
 
-> ℹ️ **Громкость (v1.2.0):** Меняйте громкость командой `!m vol [0-200]`— значение автоматически запишется в `config.env`(убедитесь, что у бота есть права на запись). Также громкость можно задать при старте через `VOLUME=`.
+## Tech Stack
+
+- **C# / .NET 8** with Windows Forms
+- **NAudio** v2.3.0 — audio playback, resampling, WASAPI output, WAV/MP3 decoding
+- **DotNetEnv** v3.1.1 — `config.env` reader/writer
+- **Anonymous Twitch IRC** — custom TLS client, no OAuth required
+
+---
+
+<a name="beepbot-c--fork-russian-version"></a>
+
+# beepbot (C# Форк)
+
+Полный переписанный на C# форк оригинального Go-бота beepbot. Это лёгкий интерактивный Twitch-бот, работающий как **приложение в области уведомлений** с полноценным GUI. Позволяет зрителям запускать звуковые мемы, озвучивать текст (TTS) на разных языках и накладывать аудиоэффекты — всё управление через трей или глобальные горячие клавиши.
+
+> **Оригинал:** Go консольное приложение → **Этот форк:** C# / .NET 8 / Windows Forms трей-приложение
+
+### Что нового по сравнению с оригиналом
+
+| Возможность | Описание |
+|-------------|----------|
+| **Трей-интерфейс** | Работает как значок в трее с полным контекстным меню — без консольного окна |
+| **Браузер звуков** | Просмотр, превью, drag-and-drop импорт, переименование и удаление звуков из GUI |
+| **Тёмная тема** | Все формы используют единую тёмную тему (синий/красный акцент) |
+| **Ползунок громкости** | Форма громкости с ползунком + текстовым вводом (0–200%) |
+| **Выбор аудиоустройства** | Выбор конкретного WASAPI устройства вывода |
+| **Авто-перевод пользователей** | Ctrl+T переводит последнее сообщение пользователя и автоматически переводит все будущие сообщения |
+| **Глобальные горячие клавиши** | `Ctrl+T` (перевод), `Ctrl+M` (mute), `Alt+M` (skip), `Ctrl+Alt+M` (stop) |
+| **Звуки подключения** | Настраиваемые звуки подключения/выхода/ошибки с шаблонами TTS (`{CHANNEL}`) |
+| **Сохранение настроек** | Все параметры (канал, громкость, устройство, язык) сохраняются в `config.env` при изменении |
+| **Анонимный IRC** | Подключение к Twitch анонимно через TLS — токен OAuth не нужен |
+| **Режим тестирования** | `--test` запускает все 15 комбинаций эффектов на тестовом WAV-файле |
 
 ---
 
 ## Настройка и запуск
 
-1. Откройте файл `config.env` текстовым редактором, впишите имя вашего Twitch-канала (`CHANNEL=имя_вашего_канала`) и, по желанию, стартовую громкость (`VOLUME=100`, диапазон 0-200).
-2. Положите свои аудиофайлы в формате **`.wav`** или **`.mp3`** (рекомендуется частота 44100 Гц) в папку `sounds`. Название файла (без расширения) становится командой вызова.
-3. Запустите исполняемый файл бота.
-4. При выходе новой версии достаточно заменить старый файл `beepbot.exe` на новый. Не перезаписывайте уже настроенный файл `config.env` и папку `sounds`, чтобы не потерять свои данные.
+1. Откройте `config.env` текстовым редактором, впишите имя вашего Twitch-канала (`CHANNEL=имя_вашего_канала`) и, по желанию, стартовую громкость (`VOLUME=100`, диапазон 0–200).
+2. Положите аудиофайлы в формате **`.wav`** или **`.mp3`** (рекомендуется 44100 Гц) в папку `sounds`. Название файла (без расширения) становится командой вызова.
+3. Запустите `beepbot.exe`. В области уведомлений появится значок с буквой "b".
+4. При обновлении заменяйте только `beepbot.exe`. Не перезаписывайте `config.env` и папку `sounds`.
 
-> * **Длительность звуков:** Используйте короткие звуки (1–10 сек). Бот хранит аудио в ОЗУ для мгновенного воспроизведения. Длинные треки быстро перегрузят оперативную память вашего компьютера.
-> * Релизный архив уже содержит папку `sounds` с тестовым файлом `beep.wav`. Вы можете сразу запустить бота и проверить его работу в чате командой `!m beep`.
+> * **Длительность звуков:** Используйте короткие звуки (1–10 сек). Бот кеширует аудио в ОЗУ для мгновенного воспроизведения.
+> * В папке `sounds` уже есть тестовый `beep.wav`. Проверьте командой `!m beep` в чате.
+
+---
+
+## Конфигурация (`config.env`)
+
+| Ключ | По умолчанию | Описание |
+|------|-------------|----------|
+| `CHANNEL` | *(пусто)* | Имя Twitch-канала (без `#`) |
+| `VOLUME` | `100` | Громкость (0–200) |
+| `DEVICE_ID` | *(пусто)* | ID WASAPI устройства вывода (пусто = системное по умолчанию) |
+| `TRANSLATE_LANG` | `ru` | Целевой язык для авто-перевода |
+| `SOUND_CONNECT` | `connect.wav` | Звук при открытии настроек |
+| `SOUND_CONNECTED` | `!m ru-sp150-st success ru-lq-sp150-st коннект ru-sp150-dl {CHANNEL}` | Команда, выполняемая при успешном подключении (поддерживает `{CHANNEL}`) |
+| `SOUND_LEAVE` | `leave.wav` | Звук при выходе/закрытии |
+| `SOUND_ERROR` | `nepravilno.wav` | Звук при ошибке подключения |
 
 ---
 
@@ -130,55 +201,77 @@ beepbot — это легкий интерактивный Twitch-бот, кот
 * `!m rand` — проиграть случайный звук из папки `sounds`.
 
 ### 1. Озвучка текста (TTS)
-Укажите код языка перед текстом, который нужно озвучить:
+Укажите код языка перед текстом:
 * `!m ru привет чат` — озвучить текст на русском.
 * `!m jp аниме` — озвучить текст на японском.
 
-[Полный список поддерживаемых языков](tts/languages.go)
+[Полный список поддерживаемых языков](Tts/Languages.cs)
 
 ### 2. Комбинирование (Миксы и Цепочки)
-* **Микс (одновременно через `+`):** `!m sound1+sound2-rs` (звуки запустятся одновременно и оба проиграются реверсом).
-* **Цепочка (последовательно через пробел):** `!m sound1-sp150 ru привет sound2` (сначала проиграется ускоренный sound1, затем по-русски озвучится слово «привет», а в конце запустится sound2).
+* **Микс (одновременно через `+`):** `!m sound1+sound2-rs` (звуки запустятся одновременно, оба реверсом).
+* **Цепочка (последовательно через пробел):** `!m sound1-sp150 ru привет sound2` (ускоренный sound1 → «привет» по-русски → sound2).
+
+### 3. Перевод
+* `!m en-tr hello my friend` — перевести английский текст на русский и озвучить русским голосом.
 
 ---
 
 ## Доступные аудиоэффекты
 
-Эффекты добавляются через дефис `-` после имени звука или кода языка (порядок не имеет значения):
+Эффекты добавляются через дефис `-` после имени звука или кода языка (порядок не важен):
 
 | Параметр | Эффект | Диапазон | Описание |
-| --- | --- | --- | --- |
-| `sp[число]` | Скорость | 10 - 200 | Скорость и высота воспроизведения (норма: `100`. `sp150` — быстрее и выше, `sp50` — медленнее и ниже). |
-| `cs[число]` | Срез начала | 0 - 100 | Отрезать указанный процент звука с начала (например, `cs20`). |
-| `ce[число]` | Срез конца | 0 - 100 | Отрезать указанный процент звука с конца (например, `ce20`). |
-| `rs` | Реверс | — | Воспроизвести звук задом наперед. |
-| `lq` | Лоу-фай | — | Эффект 8-битного ретро-звука (биткрашинг). |
-| `er` | Перегруз | — | Экстремальный перегруз громкости (Ear Rape). |
-| `st` | Заикание | — | Эффект быстрого заикания в самом начале звука. |
-| `dl` | Эхо (Delay) | — | Эффект плавного затухающего эхо. |
-| `vb` | Вибрация | — | Эффект плавного дрожания частоты (Vibrato). |
-| `ga` | Гача (Gacha) | — | Случайно добавляет неиспользованные эффекты. Количество зависит от того, сколько эффектов вы уже ввели вручную (если введено 3 или более, не добавится ничего, кроме редкого 5% шанса сорвать джекпот и получить +1 эффект). |
-| `tr` | Перевод | — | **Только для TTS.** Переводит текст на указанный язык (например, `ru-tr hello`). |
+|----------|--------|----------|----------|
+| `sp[число]` | Скорость | 10–200 | Скорость и высота (норма: `100`. `sp150` — быстрее, `sp50` — медленнее). |
+| `cs[число]` | Срез начала | 0–100 | Отрезать процент звука с начала (например, `cs20`). |
+| `ce[число]` | Срез конца | 0–100 | Отрезать процент звука с конца (например, `ce20`). |
+| `rs` | Реверс | — | Воспроизвести задом наперёд. |
+| `lq` | Лоу-фай | — | 8-битный ретро-эффект (биткрашинг). |
+| `st` | Заикание | — | Быстрое заикание в начале звука. |
+| `er` | Перегруз | — | Экстремальный перегруз громкости. |
+| `dl` | Эхо | — | Плавное затухающее эхо. |
+| `vb` | Вибрация | — | Дрожание частоты (Vibrato). |
+| `ga` | Гача | — | Случайно добавляет неиспользованные эффекты (5% шанс джекпота при 3+ эффектах). |
+| `tr` | Перевод | — | **Только для TTS.** Переводит текст на указанный язык. |
 
 *(Примеры: `!m ru-sp150 привет`, `!m omg-ga`)*
 
-> ℹ️ *Примечание:* Обрезка (cs/ce) всегда применяется к исходному звуку первой, до наложения любых других эффектов.
+> *Примечание:* Обрезка (cs/ce) применяется первой, до остальных эффектов.
 
-<a name="tts-limit-ru"></a>
-
->  **Лимит длины TTS (200 симв.):** Из-за использования бесплатного API лимит озвучки для одного куска текста — строго 200 символов. Чтобы обойти это ограничение, склеивайте команды цепочкой:
-> * ❌ `!m ru-sp150 длинный_текст_300_символов` (Плохо — обрежется до 200 симв.).
-> *  `!m ru-sp150 текст_150_символов ru-sp150 текст_150_символов` (Отлично — проиграется без швов).
+> **Лимит TTS (200 симв.):** Из-за бесплатного API лимит — 200 символов. Обходите цепочкой команд:
+> * ❌ `!m ru длинный_текст_300_символов` (обрежется до 200).
+> * ✅ `!m ru текст_150_символов ru текст_150_символов` (проиграется без швов).
 
 ---
 
-## Команды модерирования (Для Стримера и Модераторов)
+## Команды модерирования (Стример и Модераторы)
 
 | Команда | Описание |
-| --- | --- |
-| `!m mute` / `unmute` | Заглушить / включить бота (при mute текущие звуки обрываются, очередь очищается). |
-| `!m qon` / `qoff` | Включить / выключить очередь (при `qoff` звуки в чате накладываются параллельно). |
-| `!m eron` / `eroff` | Включить / выключить глобальную безопасность ушей (блокирует эффект `er` для всех). |
-| `!m stop` | Мгновенно выключить текущий звук и полностью очистить очередь. |
-| `!m skip` | Прервать текущий звук и запустить следующий из очереди. |
-| `!m vol [число]` | Устанавливает общую громкость бота (диапазон: 0-200, норма: 100). Значение автоматически сохраняется. |
+|---------|----------|
+| `!m mute` / `unmute` | Заглушить / включить бота. |
+| `!m qon` / `qoff` | Включить / выключить очередь. |
+| `!m eron` / `eroff` | Включить / выключить безопасность ушей. |
+| `!m stop` | Мгновенно выключить и очистить очередь. |
+| `!m skip` | Прервать текущий звук, запустить следующий. |
+| `!m vol [число]` | Громкость (0–200). Автосохранение. |
+
+---
+
+## Сборка из исходников
+
+Требования: .NET 8 SDK
+
+```
+dotnet publish -c Release -r win-x64 --self-contained -p:PublishSingleFile=true
+```
+
+Или используйте скрипт `publish.bat`.
+
+---
+
+## Технологии
+
+- **C# / .NET 8** с Windows Forms
+- **NAudio** v2.3.0 — воспроизведение, ресемплинг, WASAPI, декодирование WAV/MP3
+- **DotNetEnv** v3.1.1 — чтение/запись `config.env`
+- **Анонимный Twitch IRC** — кастомный TLS-клиент, OAuth не нужен
