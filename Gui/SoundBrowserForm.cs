@@ -718,7 +718,7 @@ internal static class InputDialog
             Font = new Font("Segoe UI", 11f, FontStyle.Bold),
             Cursor = Cursors.Hand,
             DialogResult = DialogResult.OK,
-            FlatAppearance = { BorderSize = 0 },
+            FlatAppearance = { BorderSize = 0, BorderColor = Bg },
         };
 
         var cancelBtn = new Button
@@ -732,7 +732,7 @@ internal static class InputDialog
             Font = new Font("Segoe UI", 11f, FontStyle.Bold),
             Cursor = Cursors.Hand,
             DialogResult = DialogResult.Cancel,
-            FlatAppearance = { BorderSize = 0 },
+            FlatAppearance = { BorderSize = 0, BorderColor = Bg },
         };
 
         var buttonsBar = new Panel
