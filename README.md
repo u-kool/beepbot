@@ -1,6 +1,6 @@
 [RU](#beepbot-c--fork-russian-version)
 
-Based on [beepbot](https://github.com/Chazoshtare/beepbot) by `@Chazoshtare`
+Based on [beepbot](https://github.com/mavis112/beepbot) by `@mavis112`
 
 ---
 
