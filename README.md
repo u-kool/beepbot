@@ -46,7 +46,10 @@ Right-click the tray icon to access all commands: Settings, Sounds, Mute/Unmute,
 ![Context Menu](img/2_context%20menu.jpg)
 
 ### Sound Browser
-Open via tray menu **Sounds → Open sound browser**. Browse, preview, import (drag-and-drop or button), rename, and delete sound files. Right-click a sound to see its filename.
+1. Left-click the tray icon
+2. Right-click the tray icon → **Settings** → **Open sounds folder**
+
+Browse, preview, import (drag-and-drop), rename, and delete sound files.
 
 ![Sounds](img/3_sounds.jpg)
 
@@ -213,7 +216,10 @@ Or use the included `publish.bat` script.
 ![Context Menu](img/2_context%20menu.jpg)
 
 ### Браузер звуков
-Открывается через трей-меню **Sounds → Open sound browser**. Просмотр, превью, импорт (drag-and-drop или кнопкой), переименование и удаление звуков. Правый клик по звуку показывает имя файла.
+1. Открывается по клику ЛКМ на значке в трее
+2. Через контекстное меню (ПКМ) → **Настройки** → **Открыть папку sounds**
+
+Просмотр, превью, импорт (drag-and-drop), переименование и удаление звуков.
 
 ![Sounds](img/3_sounds.jpg)
 
