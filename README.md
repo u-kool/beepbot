@@ -28,6 +28,14 @@ A ground-up C# rewrite of the original Go-based beepbot. This is a lightweight, 
 
 ---
 
+## Screenshots
+
+| Login | Context Menu | Sound Browser | Volume Control |
+|-------|--------------|---------------|----------------|
+| ![Login](img/1_login.jpg) | ![Context Menu](img/2_context%20menu.jpg) | ![Sounds](img/3_sounds.jpg) | ![Volume](img/4_volume.jpg) |
+
+---
+
 ## Setup & Launch
 
 1. Open `config.env` with a text editor, enter your Twitch channel name (`CHANNEL=your_channel_name`), and optionally set your starting volume (`VOLUME=100`, range 0–200).
@@ -163,6 +171,14 @@ Or use the included `publish.bat` script.
 | **Сохранение настроек** | Все параметры (канал, громкость, устройство, язык) сохраняются в `config.env` при изменении |
 | **Анонимный IRC** | Подключение к Twitch анонимно через TLS — токен OAuth не нужен |
 
+
+---
+
+## Скриншоты
+
+| Логин | Контекстное меню | Браузер звуков | Громкость |
+|-------|------------------|----------------|-----------|
+| ![Login](img/1_login.jpg) | ![Context Menu](img/2_context%20menu.jpg) | ![Sounds](img/3_sounds.jpg) | ![Volume](img/4_volume.jpg) |
 
 ---
 
