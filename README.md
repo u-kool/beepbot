@@ -31,7 +31,12 @@ A ground-up C# rewrite of the original Go-based beepbot. This is a lightweight, 
 ## Screenshots
 
 ### Login window
-Opens automatically on first launch, or via tray menu **Settings**. Enter your Twitch channel name and click Connect.
+Opens automatically on first launch.
+1. Middle-click (Mouse3) the tray icon
+2. Right-click the tray icon → **Status: u_kool** (left-click)
+3. Right-click the tray icon → **Settings** → **Change nick...**
+
+Enter your Twitch channel name and click Connect.
 
 ![Login](img/1_login.jpg)
 
@@ -193,7 +198,12 @@ Or use the included `publish.bat` script.
 ## Скриншоты
 
 ### Окно логина
-Открывается автоматически при первом запуске, или через меню в трее **Settings**. Введите имя вашего Twitch-канала и нажмите Connect.
+Открывается автоматически при первом запуске.
+1. По клику колёсиком мыши (Mouse3) на значке в трее
+2. Через контекстное меню (ПКМ) → **Status: u_kool** (ЛКМ)
+3. Через контекстное меню (ПКМ) → **Настройки** → **Сменить ник...**
+
+Введите имя вашего Twitch-канала и нажмите Connect.
 
 ![Login](img/1_login.jpg)
 
