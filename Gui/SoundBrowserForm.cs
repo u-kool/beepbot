@@ -701,7 +701,7 @@ internal static class InputDialog
             ControlBox = false,
             FormBorderStyle = FormBorderStyle.None,
             StartPosition = FormStartPosition.CenterParent,
-            ClientSize = new Size(300, 100),
+            ClientSize = new Size(300, 60),
             TopMost = true,
             ShowInTaskbar = false,
             BackColor = Bg,
@@ -709,8 +709,8 @@ internal static class InputDialog
 
         var textBox = new TextBox
         {
-            Location = new Point(12, 22),
-            Size = new Size(230, 23),
+            Location = new Point(8, 18),
+            Size = new Size(238, 24),
             Text = defaultValue,
             BackColor = Surface,
             ForeColor = Txt,
@@ -720,8 +720,8 @@ internal static class InputDialog
         var okBtn = new Button
         {
             Text = "✔",
-            Location = new Point(248, 20),
-            Size = new Size(22, 22),
+            Location = new Point(250, 17),
+            Size = new Size(20, 22),
             DialogResult = DialogResult.OK,
             BackColor = Accent,
             ForeColor = Color.White,
@@ -731,9 +731,9 @@ internal static class InputDialog
 
         var cancelBtn = new Button
         {
-            Text = "✖",
-            Location = new Point(274, 20),
-            Size = new Size(22, 22),
+            Text = "x",
+            Location = new Point(272, 17),
+            Size = new Size(20, 22),
             DialogResult = DialogResult.Cancel,
             BackColor = Muted,
             ForeColor = Txt,
