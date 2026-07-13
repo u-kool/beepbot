@@ -30,7 +30,7 @@ A ground-up C# rewrite of the original Go-based beepbot. This is a lightweight, 
 
 ## Screenshots
 
-| Login | Context Menu | Sound Browser | Volume Control |
+| Login (авто-показ при первом запуске или через трей-меню "Settings") | Context Menu (правый клик по иконке в трее) | Sound Browser (трей-меню "Sounds" → "Open sound browser") | Volume Control (трей-меню "Sounds" → "Open volume control") |
 |-------|--------------|---------------|----------------|
 | ![Login](img/1_login.jpg) | ![Context Menu](img/2_context%20menu.jpg) | ![Sounds](img/3_sounds.jpg) | ![Volume](img/4_volume.jpg) |
 
@@ -176,7 +176,7 @@ Or use the included `publish.bat` script.
 
 ## Скриншоты
 
-| Логин | Контекстное меню | Браузер звуков | Громкость |
+| Логин (авто-показ при первом запуске или через трей-меню "Settings") | Контекстное меню (правый клик по иконке в трее) | Браузер звуков (трей-меню "Sounds" → "Open sound browser") | Громкость (трей-меню "Sounds" → "Open volume control") |
 |-------|------------------|----------------|-----------|
 | ![Login](img/1_login.jpg) | ![Context Menu](img/2_context%20menu.jpg) | ![Sounds](img/3_sounds.jpg) | ![Volume](img/4_volume.jpg) |
 
