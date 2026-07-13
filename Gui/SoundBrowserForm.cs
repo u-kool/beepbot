@@ -701,49 +701,61 @@ internal static class InputDialog
             ControlBox = false,
             FormBorderStyle = FormBorderStyle.None,
             StartPosition = FormStartPosition.CenterParent,
-            ClientSize = new Size(300, 60),
+            ClientSize = new Size(300, 100),
             TopMost = true,
             ShowInTaskbar = false,
             BackColor = Bg,
         };
 
-        var textBox = new TextBox
-        {
-            Location = new Point(8, 18),
-            Size = new Size(260, 24),
-            Text = defaultValue,
-            BackColor = Surface,
-            ForeColor = Txt,
-            BorderStyle = BorderStyle.FixedSingle,
-        };
-
         var okBtn = new Button
         {
             Text = "✔",
-            Location = new Point(270, 18),
-            Size = new Size(14, 22),
-            DialogResult = DialogResult.OK,
-            BackColor = Surface,
-            ForeColor = Txt,
+            Dock = DockStyle.Right,
+            Width = 44,
             FlatStyle = FlatStyle.Flat,
-            TabStop = false,
+            ForeColor = Txt,
+            BackColor = Bg,
+            Font = new Font("Segoe UI", 11f, FontStyle.Bold),
+            Cursor = Cursors.Hand,
+            DialogResult = DialogResult.OK,
         };
         okBtn.FlatAppearance.BorderSize = 0;
 
         var cancelBtn = new Button
         {
             Text = "x",
-            Location = new Point(285, 18),
-            Size = new Size(14, 22),
-            DialogResult = DialogResult.Cancel,
-            BackColor = Surface,
-            ForeColor = Txt,
+            Dock = DockStyle.Right,
+            Width = 44,
             FlatStyle = FlatStyle.Flat,
-            TabStop = false,
+            ForeColor = Txt,
+            BackColor = Bg,
+            Font = new Font("Segoe UI", 11f, FontStyle.Bold),
+            Cursor = Cursors.Hand,
+            DialogResult = DialogResult.Cancel,
         };
         cancelBtn.FlatAppearance.BorderSize = 0;
 
-        f.Controls.AddRange(new Control[] { okBtn, cancelBtn, textBox });
+        var buttonsBar = new Panel
+        {
+            Dock = DockStyle.Top,
+            Height = 28,
+            BackColor = Bg,
+        };
+        buttonsBar.Controls.Add(cancelBtn);
+        buttonsBar.Controls.Add(okBtn);
+
+        var textBox = new TextBox
+        {
+            Location = new Point(8, 40),
+            Size = new Size(284, 24),
+            Text = defaultValue,
+            BackColor = Surface,
+            ForeColor = Txt,
+            BorderStyle = BorderStyle.FixedSingle,
+        };
+
+        f.Controls.Add(textBox);
+        f.Controls.Add(buttonsBar);
         f.AcceptButton = okBtn;
         f.CancelButton = cancelBtn;
 
