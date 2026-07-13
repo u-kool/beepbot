@@ -701,7 +701,7 @@ internal static class InputDialog
             ControlBox = false,
             FormBorderStyle = FormBorderStyle.None,
             StartPosition = FormStartPosition.CenterParent,
-            ClientSize = new Size(300, 100),
+            ClientSize = new Size(300, 80),
             TopMost = true,
             ShowInTaskbar = false,
             BackColor = Bg,
@@ -738,7 +738,7 @@ internal static class InputDialog
         var buttonsBar = new Panel
         {
             Dock = DockStyle.Top,
-            Height = 28,
+            Height = 22,
             BackColor = Bg,
         };
         buttonsBar.Controls.Add(okBtn);
@@ -746,7 +746,7 @@ internal static class InputDialog
 
         var textBox = new TextBox
         {
-            Location = new Point(8, 40),
+            Location = new Point(8, 34),
             Size = new Size(284, 24),
             Text = defaultValue,
             BackColor = Surface,
