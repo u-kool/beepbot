@@ -30,9 +30,25 @@ A ground-up C# rewrite of the original Go-based beepbot. This is a lightweight, 
 
 ## Screenshots
 
-| Login (авто-показ при первом запуске или через трей-меню "Settings") | Context Menu (правый клик по иконке в трее) | Sound Browser (трей-меню "Sounds" → "Open sound browser") | Volume Control (трей-меню "Sounds" → "Open volume control") |
-|-------|--------------|---------------|----------------|
-| ![Login](img/1_login.jpg) | ![Context Menu](img/2_context%20menu.jpg) | ![Sounds](img/3_sounds.jpg) | ![Volume](img/4_volume.jpg) |
+### Login window
+Opens automatically on first launch, or via tray menu **Settings**. Enter your Twitch channel name and click Connect.
+
+![Login](img/1_login.jpg)
+
+### Context Menu
+Right-click the tray icon to access all commands: Settings, Sounds, Mute/Unmute, Skip, Stop, and Exit.
+
+![Context Menu](img/2_context%20menu.jpg)
+
+### Sound Browser
+Open via tray menu **Sounds → Open sound browser**. Browse, preview, import (drag-and-drop or button), rename, and delete sound files. Right-click a sound to see its filename.
+
+![Sounds](img/3_sounds.jpg)
+
+### Volume Control
+Open via tray menu **Sounds → Open volume control**. Adjust master volume with a slider (0–200%) or type a value manually. Press Enter or close to save.
+
+![Volume](img/4_volume.jpg)
 
 ---
 
@@ -176,9 +192,25 @@ Or use the included `publish.bat` script.
 
 ## Скриншоты
 
-| Логин (авто-показ при первом запуске или через трей-меню "Settings") | Контекстное меню (правый клик по иконке в трее) | Браузер звуков (трей-меню "Sounds" → "Open sound browser") | Громкость (трей-меню "Sounds" → "Open volume control") |
-|-------|------------------|----------------|-----------|
-| ![Login](img/1_login.jpg) | ![Context Menu](img/2_context%20menu.jpg) | ![Sounds](img/3_sounds.jpg) | ![Volume](img/4_volume.jpg) |
+### Окно логина
+Открывается автоматически при первом запуске, или через меню в трее **Settings**. Введите имя вашего Twitch-канала и нажмите Connect.
+
+![Login](img/1_login.jpg)
+
+### Контекстное меню
+Правый клик по иконке в трее — доступ ко всем командам: Settings, Sounds, Mute/Unmute, Skip, Stop и Exit.
+
+![Context Menu](img/2_context%20menu.jpg)
+
+### Браузер звуков
+Открывается через трей-меню **Sounds → Open sound browser**. Просмотр, превью, импорт (drag-and-drop или кнопкой), переименование и удаление звуков. Правый клик по звуку показывает имя файла.
+
+![Sounds](img/3_sounds.jpg)
+
+### Регулятор громкости
+Открывается через трей-меню **Sounds → Open volume control**. Ползунок (0–200%) или ручной ввод значения. Нажмите Enter или закройте окно для сохранения.
+
+![Volume](img/4_volume.jpg)
 
 ---
 
