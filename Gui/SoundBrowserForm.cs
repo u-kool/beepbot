@@ -698,58 +698,64 @@ internal static class InputDialog
         using var f = new Form
         {
             Text = title,
-            FormBorderStyle = FormBorderStyle.FixedDialog,
+            ControlBox = false,
+            FormBorderStyle = FormBorderStyle.None,
             StartPosition = FormStartPosition.CenterParent,
-            ClientSize = new Size(300, 130),
+            ClientSize = new Size(300, 100),
             TopMost = true,
             ShowInTaskbar = false,
             BackColor = Bg,
         };
 
-        var label = new Label
+        var okBtn = new Button
         {
-            Text = prompt,
-            Location = new Point(12, 12),
-            AutoSize = true,
+            Text = "✔",
+            Dock = DockStyle.Right,
+            Width = 44,
+            FlatStyle = FlatStyle.Flat,
             ForeColor = Txt,
             BackColor = Bg,
+            Font = new Font("Segoe UI", 11f, FontStyle.Bold),
+            Cursor = Cursors.Hand,
+            DialogResult = DialogResult.OK,
+            FlatAppearance = { BorderSize = 0 },
         };
+
+        var cancelBtn = new Button
+        {
+            Text = "x",
+            Dock = DockStyle.Right,
+            Width = 44,
+            FlatStyle = FlatStyle.Flat,
+            ForeColor = Txt,
+            BackColor = Bg,
+            Font = new Font("Segoe UI", 11f, FontStyle.Bold),
+            Cursor = Cursors.Hand,
+            DialogResult = DialogResult.Cancel,
+            FlatAppearance = { BorderSize = 0 },
+        };
+
+        var buttonsBar = new Panel
+        {
+            Dock = DockStyle.Top,
+            Height = 28,
+            BackColor = Bg,
+        };
+        buttonsBar.Controls.Add(okBtn);
+        buttonsBar.Controls.Add(cancelBtn);
 
         var textBox = new TextBox
         {
-            Location = new Point(12, 36),
-            Size = new Size(276, 23),
+            Location = new Point(8, 40),
+            Size = new Size(284, 24),
             Text = defaultValue,
             BackColor = Surface,
             ForeColor = Txt,
             BorderStyle = BorderStyle.FixedSingle,
         };
 
-        var okBtn = new Button
-        {
-            Text = "ОК",
-            Location = new Point(120, 72),
-            Size = new Size(80, 28),
-            DialogResult = DialogResult.OK,
-            BackColor = Accent,
-            ForeColor = Color.White,
-            FlatStyle = FlatStyle.Flat,
-        };
-        okBtn.FlatAppearance.BorderSize = 0;
-
-        var cancelBtn = new Button
-        {
-            Text = "Отмена",
-            Location = new Point(208, 72),
-            Size = new Size(80, 28),
-            DialogResult = DialogResult.Cancel,
-            BackColor = Muted,
-            ForeColor = Txt,
-            FlatStyle = FlatStyle.Flat,
-        };
-        cancelBtn.FlatAppearance.BorderSize = 0;
-
-        f.Controls.AddRange(new Control[] { label, textBox, okBtn, cancelBtn });
+        f.Controls.Add(textBox);
+        f.Controls.Add(buttonsBar);
         f.AcceptButton = okBtn;
         f.CancelButton = cancelBtn;
 
