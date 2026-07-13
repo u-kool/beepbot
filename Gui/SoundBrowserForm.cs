@@ -699,7 +699,7 @@ internal static class InputDialog
         {
             Text = title,
             ControlBox = false,
-            FormBorderStyle = FormBorderStyle.FixedToolWindow,
+            FormBorderStyle = FormBorderStyle.None,
             StartPosition = FormStartPosition.CenterParent,
             ClientSize = new Size(300, 100),
             TopMost = true,
