@@ -710,7 +710,7 @@ internal static class InputDialog
         var textBox = new TextBox
         {
             Location = new Point(8, 18),
-            Size = new Size(284, 24),
+            Size = new Size(260, 24),
             Text = defaultValue,
             BackColor = Surface,
             ForeColor = Txt,
@@ -720,7 +720,7 @@ internal static class InputDialog
         var okBtn = new Button
         {
             Text = "✔",
-            Location = new Point(260, 18),
+            Location = new Point(270, 18),
             Size = new Size(14, 22),
             DialogResult = DialogResult.OK,
             BackColor = Surface,
@@ -733,7 +733,7 @@ internal static class InputDialog
         var cancelBtn = new Button
         {
             Text = "x",
-            Location = new Point(275, 18),
+            Location = new Point(285, 18),
             Size = new Size(14, 22),
             DialogResult = DialogResult.Cancel,
             BackColor = Surface,
@@ -743,7 +743,7 @@ internal static class InputDialog
         };
         cancelBtn.FlatAppearance.BorderSize = 0;
 
-        f.Controls.AddRange(new Control[] { textBox, okBtn, cancelBtn });
+        f.Controls.AddRange(new Control[] { okBtn, cancelBtn, textBox });
         f.AcceptButton = okBtn;
         f.CancelButton = cancelBtn;
 
