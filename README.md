@@ -24,7 +24,7 @@ A ground-up C# rewrite of the original Go-based beepbot. This is a lightweight, 
 | **Connection Sounds** | Configurable connect/leave/error sounds with TTS command templates (`{CHANNEL}` placeholder) |
 | **Persistent Config** | All settings (channel, volume, device, translate lang) are saved to `config.env` on change |
 | **Anonymous IRC** | Connects to Twitch anonymously via TLS — no OAuth token needed |
-| **Test Mode** | Run `--test` to test all 15 effect combinations against a test WAV file |
+
 
 ---
 
@@ -162,7 +162,7 @@ Or use the included `publish.bat` script.
 | **Звуки подключения** | Настраиваемые звуки подключения/выхода/ошибки с шаблонами TTS (`{CHANNEL}`) |
 | **Сохранение настроек** | Все параметры (канал, громкость, устройство, язык) сохраняются в `config.env` при изменении |
 | **Анонимный IRC** | Подключение к Twitch анонимно через TLS — токен OAuth не нужен |
-| **Режим тестирования** | `--test` запускает все 15 комбинаций эффектов на тестовом WAV-файле |
+
 
 ---
 
