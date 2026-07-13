@@ -710,7 +710,7 @@ internal static class InputDialog
         var textBox = new TextBox
         {
             Location = new Point(8, 18),
-            Size = new Size(238, 24),
+            Size = new Size(284, 24),
             Text = defaultValue,
             BackColor = Surface,
             ForeColor = Txt,
@@ -720,24 +720,26 @@ internal static class InputDialog
         var okBtn = new Button
         {
             Text = "✔",
-            Location = new Point(250, 17),
-            Size = new Size(20, 22),
+            Location = new Point(260, 18),
+            Size = new Size(14, 22),
             DialogResult = DialogResult.OK,
-            BackColor = Accent,
-            ForeColor = Color.White,
+            BackColor = Surface,
+            ForeColor = Txt,
             FlatStyle = FlatStyle.Flat,
+            TabStop = false,
         };
         okBtn.FlatAppearance.BorderSize = 0;
 
         var cancelBtn = new Button
         {
             Text = "x",
-            Location = new Point(272, 17),
-            Size = new Size(20, 22),
+            Location = new Point(275, 18),
+            Size = new Size(14, 22),
             DialogResult = DialogResult.Cancel,
-            BackColor = Muted,
+            BackColor = Surface,
             ForeColor = Txt,
             FlatStyle = FlatStyle.Flat,
+            TabStop = false,
         };
         cancelBtn.FlatAppearance.BorderSize = 0;
 
