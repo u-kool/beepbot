@@ -7,7 +7,7 @@ public class EnvConfig
     public string? DeviceId { get; set; }
     public string TranslateLang { get; set; } = "ru";
     public string SoundConnect { get; set; } = "connect.wav";
-    public string SoundConnected { get; set; } = "!m ru-sp150-st success ru-lq-sp150-st коннект ru-sp150-dl {CHANNEL}";
+    public string SoundConnected { get; set; } = "!m ru-sp150-st успешный ru-lq-sp150-st коннект ru-sp150-dl {CHANNEL}";
     public string SoundLeave { get; set; } = "leave.wav";
     public string SoundError { get; set; } = "nepravilno.wav";
     private readonly string _envPath;
@@ -20,7 +20,17 @@ public class EnvConfig
     public void Load()
     {
         if (!File.Exists(_envPath))
-            throw new FileNotFoundException($"Config file not found: {_envPath}");
+        {
+            File.WriteAllLines(_envPath, new[]
+            {
+                "CHANNEL=",
+                "VOLUME=100",
+                "SOUND_CONNECT=connect.wav",
+                "SOUND_CONNECTED=!m ru-sp150-st успешный ru-lq-sp150-st коннект ru-sp150-dl {CHANNEL}",
+                "SOUND_LEAVE=leave.wav",
+                "SOUND_ERROR=nepravilno.wav",
+            });
+        }
         var env = DotNetEnv.Env.Load(_envPath).ToDictionary(x => x.Key, x => x.Value ?? "");
         Channel = env.TryGetValue("CHANNEL", out var ch) ? ch : "";
         Volume = env.TryGetValue("VOLUME", out var volStr) && int.TryParse(volStr, out var v) ? v : 100;
@@ -28,7 +38,7 @@ public class EnvConfig
         DeviceId = env.TryGetValue("DEVICE_ID", out var did) && !string.IsNullOrWhiteSpace(did) ? did : null;
         TranslateLang = env.TryGetValue("TRANSLATE_LANG", out var tl) && !string.IsNullOrWhiteSpace(tl) ? tl : "ru";
         SoundConnect = env.TryGetValue("SOUND_CONNECT", out var sc) && !string.IsNullOrWhiteSpace(sc) ? sc : "connect.wav";
-        SoundConnected = env.TryGetValue("SOUND_CONNECTED", out var scd) && !string.IsNullOrWhiteSpace(scd) ? scd : "!m ru-sp150-st success ru-lq-sp150-st коннект ru-sp150-dl {CHANNEL}";
+        SoundConnected = env.TryGetValue("SOUND_CONNECTED", out var scd) && !string.IsNullOrWhiteSpace(scd) ? scd : "!m ru-sp150-st успешный ru-lq-sp150-st коннект ru-sp150-dl {CHANNEL}";
         SoundLeave = env.TryGetValue("SOUND_LEAVE", out var sl) && !string.IsNullOrWhiteSpace(sl) ? sl : "leave.wav";
         SoundError = env.TryGetValue("SOUND_ERROR", out var se) && !string.IsNullOrWhiteSpace(se) ? se : "nepravilno.wav";
     }

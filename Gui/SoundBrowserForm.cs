@@ -14,7 +14,7 @@ public class SoundBrowserForm : Form
     private readonly DarkScrollPanel _listPanel;
     private readonly Panel _dragOverlay;
     private readonly Button _closeButton;
-    private readonly Button _infoButton;
+    private readonly Control _infoButton;
     private readonly Button _deleteButton;
     private readonly ToolTip _toolTip = new();
     private ContextMenuStrip? _ctxMenu;
@@ -65,18 +65,17 @@ public class SoundBrowserForm : Form
         _closeButton.FlatAppearance.BorderSize = 0;
         _closeButton.Click += (_, _) => { StopPlayback(); Close(); };
 
-        _infoButton = new Button
+        _infoButton = new Label
         {
             Text = "\u2139",
             Dock = DockStyle.Right,
             Width = 40,
-            FlatStyle = FlatStyle.Flat,
             ForeColor = Txt,
             BackColor = Bg,
             Font = new Font("Segoe UI", 11f),
             Cursor = Cursors.Help,
+            TextAlign = ContentAlignment.MiddleCenter,
         };
-        _infoButton.FlatAppearance.BorderSize = 0;
         _toolTip.SetToolTip(_infoButton, "Перетащите .wav/.mp3 файлы сюда");
 
         _deleteButton = new Button
@@ -97,7 +96,7 @@ public class SoundBrowserForm : Form
         var buttonsBar = new Panel
         {
             Dock = DockStyle.Top,
-            Height = 28,
+            Height = 34,
             BackColor = Bg,
         };
         buttonsBar.Controls.Add(_deleteButton);
@@ -701,7 +700,7 @@ internal static class InputDialog
             ControlBox = false,
             FormBorderStyle = FormBorderStyle.None,
             StartPosition = FormStartPosition.CenterParent,
-            ClientSize = new Size(300, 80),
+            ClientSize = new Size(300, 105),
             TopMost = true,
             ShowInTaskbar = false,
             BackColor = Bg,
@@ -738,15 +737,26 @@ internal static class InputDialog
         var buttonsBar = new Panel
         {
             Dock = DockStyle.Top,
-            Height = 22,
+            Height = 34,
             BackColor = Bg,
         };
         buttonsBar.Controls.Add(okBtn);
         buttonsBar.Controls.Add(cancelBtn);
 
+        var promptLabel = new Label
+        {
+            Text = "Имя",
+            Dock = DockStyle.Top,
+            Height = 32,
+            TextAlign = ContentAlignment.MiddleCenter,
+            ForeColor = Accent,
+            BackColor = Bg,
+            Font = new Font("Segoe UI", 15f, FontStyle.Bold),
+        };
+
         var textBox = new TextBox
         {
-            Location = new Point(8, 34),
+            Location = new Point(8, 72),
             Size = new Size(284, 24),
             Text = defaultValue,
             BackColor = Surface,
@@ -755,6 +765,7 @@ internal static class InputDialog
         };
 
         f.Controls.Add(textBox);
+        f.Controls.Add(promptLabel);
         f.Controls.Add(buttonsBar);
         f.AcceptButton = okBtn;
         f.CancelButton = cancelBtn;
