@@ -361,10 +361,12 @@ public class SoundBrowserForm : Form
     {
         if (_contextTargetIndex < 0 || _contextTargetIndex >= _fileNames.Count) return;
         var oldName = _fileNames[_contextTargetIndex];
-        var result = InputDialog.Show("Переименовать", "Новое имя:", oldName);
-        if (string.IsNullOrWhiteSpace(result) || result == oldName) return;
+        var ext = Path.GetExtension(oldName);
+        var nameWithoutExt = Path.GetFileNameWithoutExtension(oldName);
+        var result = InputDialog.Show("Переименовать", "Новое имя:", nameWithoutExt);
+        if (string.IsNullOrWhiteSpace(result) || result == nameWithoutExt) return;
         var oldPath = Path.Combine(_soundsPath, oldName);
-        var newPath = Path.Combine(_soundsPath, result);
+        var newPath = Path.Combine(_soundsPath, result + ext);
         if (File.Exists(oldPath) && !File.Exists(newPath))
         {
             try { File.Move(oldPath, newPath); } catch { }
@@ -696,27 +698,19 @@ internal static class InputDialog
         using var f = new Form
         {
             Text = title,
+            ControlBox = false,
             FormBorderStyle = FormBorderStyle.FixedToolWindow,
             StartPosition = FormStartPosition.CenterParent,
-            ClientSize = new Size(300, 120),
+            ClientSize = new Size(300, 100),
             TopMost = true,
             ShowInTaskbar = false,
             BackColor = Bg,
         };
 
-        var label = new Label
-        {
-            Text = prompt,
-            Location = new Point(12, 15),
-            AutoSize = true,
-            ForeColor = Txt,
-            BackColor = Bg,
-        };
-
         var textBox = new TextBox
         {
-            Location = new Point(12, 42),
-            Size = new Size(276, 23),
+            Location = new Point(12, 22),
+            Size = new Size(230, 23),
             Text = defaultValue,
             BackColor = Surface,
             ForeColor = Txt,
@@ -725,9 +719,9 @@ internal static class InputDialog
 
         var okBtn = new Button
         {
-            Text = "OK",
-            Location = new Point(110, 78),
-            Size = new Size(80, 28),
+            Text = "✔",
+            Location = new Point(248, 20),
+            Size = new Size(22, 22),
             DialogResult = DialogResult.OK,
             BackColor = Accent,
             ForeColor = Color.White,
@@ -737,9 +731,9 @@ internal static class InputDialog
 
         var cancelBtn = new Button
         {
-            Text = "Отмена",
-            Location = new Point(200, 78),
-            Size = new Size(80, 28),
+            Text = "✖",
+            Location = new Point(274, 20),
+            Size = new Size(22, 22),
             DialogResult = DialogResult.Cancel,
             BackColor = Muted,
             ForeColor = Txt,
@@ -747,7 +741,7 @@ internal static class InputDialog
         };
         cancelBtn.FlatAppearance.BorderSize = 0;
 
-        f.Controls.AddRange(new Control[] { label, textBox, okBtn, cancelBtn });
+        f.Controls.AddRange(new Control[] { textBox, okBtn, cancelBtn });
         f.AcceptButton = okBtn;
         f.CancelButton = cancelBtn;
 
