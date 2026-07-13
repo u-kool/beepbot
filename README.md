@@ -67,7 +67,7 @@ Specify the language code before the text you want to read:
 * `!m en hello chat` — read the text in English.
 * `!m jp ohayo` — read the text in Japanese.
 
-[Full list of supported languages](Tts/Languages.cs)
+[Full list of supported languages](tts/Languages.cs)
 
 ### 2. Combining Sounds & Speech
 * **Simultaneous Mix (using `+`):** `!m sound1+sound2-rs` (both sounds play at the exact same time, reversed).
@@ -205,7 +205,7 @@ Or use the included `publish.bat` script.
 * `!m ru привет чат` — озвучить текст на русском.
 * `!m jp аниме` — озвучить текст на японском.
 
-[Полный список поддерживаемых языков](Tts/Languages.cs)
+[Полный список поддерживаемых языков](tts/Languages.cs)
 
 ### 2. Комбинирование (Миксы и Цепочки)
 * **Микс (одновременно через `+`):** `!m sound1+sound2-rs` (звуки запустятся одновременно, оба реверсом).
