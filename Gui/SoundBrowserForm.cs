@@ -720,6 +720,7 @@ internal static class InputDialog
             DialogResult = DialogResult.OK,
         };
         okBtn.FlatAppearance.BorderSize = 0;
+        okBtn.FlatAppearance.BorderColor = Color.Transparent;
 
         var cancelBtn = new Button
         {
@@ -741,8 +742,8 @@ internal static class InputDialog
             Height = 28,
             BackColor = Bg,
         };
-        buttonsBar.Controls.Add(cancelBtn);
         buttonsBar.Controls.Add(okBtn);
+        buttonsBar.Controls.Add(cancelBtn);
 
         var textBox = new TextBox
         {
