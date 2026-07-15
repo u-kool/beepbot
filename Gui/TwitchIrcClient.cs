@@ -15,16 +15,20 @@ public class TwitchIrcClient : IDisposable
     private CancellationTokenSource? _cts;
     private Task? _readLoop;
     private Task? _heartbeat;
+    private bool _reconnecting;
+    private string _channel = "";
 
     public bool IsConnected => _tcp?.Connected == true;
 
     public event Action<string>? Log;
     public event Action<string, string, string, bool, bool>? OnMessage;
+    public event Action? OnDisconnected;
 
     public async Task ConnectAsync(string channel, CancellationToken ct = default)
     {
         await DisconnectAsync();
 
+        _channel = channel;
         _cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
         var token = _cts.Token;
 
@@ -83,6 +87,7 @@ public class TwitchIrcClient : IDisposable
             throw new Exception($"Channel \"{channel}\" — no JOIN response (timeout)");
 
         Log?.Invoke($"Connected to #{channel}!");
+        _reconnecting = false;
 
         _heartbeat = Task.Run(async () =>
         {
@@ -95,7 +100,11 @@ public class TwitchIrcClient : IDisposable
                 }
             }
             catch (OperationCanceledException) { }
-            catch { Log?.Invoke("Heartbeat failed"); }
+            catch
+            {
+                Log?.Invoke("Heartbeat failed");
+                _ = ReconnectAsync();
+            }
         }, token);
 
         _readLoop = Task.Run(async () =>
@@ -105,12 +114,24 @@ public class TwitchIrcClient : IDisposable
                 while (!token.IsCancellationRequested)
                 {
                     var line = await _reader.ReadLineAsync(token);
-                    if (line == null) { Log?.Invoke("[DISCONNECTED]"); break; }
+                    if (line == null)
+                    {
+                        Log?.Invoke("[DISCONNECTED]");
+                        _ = ReconnectAsync();
+                        break;
+                    }
 
                     if (line.StartsWith("PING"))
                     {
                         await _writer.WriteAsync("PONG :tmi.twitch.tv\r\n");
                         continue;
+                    }
+
+                    if (line.Contains(":tmi.twitch.tv RECONNECT"))
+                    {
+                        Log?.Invoke("[RECONNECT requested by server]");
+                        _ = ReconnectAsync();
+                        break;
                     }
 
                     var privmsg = ParsePrivmsg(line);
@@ -126,8 +147,42 @@ public class TwitchIrcClient : IDisposable
                 }
             }
             catch (OperationCanceledException) { }
-            catch (Exception ex) { Log?.Invoke($"Read error: {ex.Message}"); }
+            catch (Exception ex)
+            {
+                Log?.Invoke($"Read error: {ex.Message}");
+                _ = ReconnectAsync();
+            }
         }, token);
+    }
+
+    private async Task ReconnectAsync()
+    {
+        if (_reconnecting || _cts?.IsCancellationRequested == true) return;
+        _reconnecting = true;
+
+        await DisconnectAsync();
+
+        var delay = 2;
+        for (int i = 0; i < 10; i++)
+        {
+            Log?.Invoke($"Reconnecting in {delay}s (attempt {i + 1}/10)...");
+            await Task.Delay(TimeSpan.FromSeconds(delay));
+
+            try
+            {
+                await ConnectAsync(_channel);
+                Log?.Invoke("Reconnected!");
+                return;
+            }
+            catch (Exception ex)
+            {
+                Log?.Invoke($"Reconnect failed: {ex.Message}");
+                delay = Math.Min(delay * 2, 60);
+            }
+        }
+
+        Log?.Invoke("Reconnect failed after 10 attempts");
+        OnDisconnected?.Invoke();
     }
 
     public async Task DisconnectAsync()

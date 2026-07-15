@@ -75,6 +75,11 @@ public class TrayForm : Form
         _irc = new TwitchIrcClient();
         _irc.Log += msg => Log.Info($"IRC: {msg}");
         _irc.OnMessage += HandleMessage;
+        _irc.OnDisconnected += () =>
+        {
+            _statusItem.Text = "Status: disconnected";
+            _trayIcon.Text = "beepbot - disconnected";
+        };
 
         Log.Info($"Sounds loaded: {_bot.Engine.GetSoundNames().Count}");
         Log.Info($"Volume: {_config.Volume}");
